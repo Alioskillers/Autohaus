@@ -32,6 +32,7 @@ exports.getAllOrders = async (req, res) => {
         period: order.period,
         createdAt: formatDate(order.createdAt),
         deliveryDate: formatDate(order.deliveryDate),
+        installmentPlan: order.installmentPlan || null
       }))
     });
   } catch (err) {
@@ -39,46 +40,51 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
-// Search orders by receipt number, date, email, or phone
 exports.searchOrders = async (req, res) => {
-  const { email, phone, receipt, date } = req.query;
-
   try {
-    let query = {};
+    const { email, phone, receipt, date } = req.query;
+    const query = {};
 
-    if (receipt) query.receiptNumber = receipt;
+    if (email) {
+      const user = await User.findOne({ email });
+      if (user) query.user = user._id;
+    }
+
+    if (phone) {
+      const user = await User.findOne({ phone });
+      if (user) query.user = user._id;
+    }
+
+    if (receipt) {
+      query.receiptNumber = { $regex: `^${receipt}$`, $options: 'i' };
+    }
 
     if (date) {
       const dayStart = new Date(date);
       const dayEnd = new Date(date);
-      dayEnd.setDate(dayEnd.getDate() + 1);
-      query.createdAt = { $gte: dayStart, $lt: dayEnd };
+      dayEnd.setHours(23, 59, 59, 999);
+      query.createdAt = { $gte: dayStart, $lte: dayEnd };
     }
 
-    if (email || phone) {
-      const userQuery = {};
-      if (email) userQuery.email = email;
-      if (phone) userQuery.phone = phone;
-      const users = await User.find(userQuery).select('_id');
-      query.user = { $in: users.map(u => u._id) };
-    }
-
-    const orders = await Order.find(query).populate('user car');
+    const orders = await Order.find(query)
+      .populate('user', 'email phone')
+      .populate('car', 'make model price');
 
     res.json(orders.map(order => ({
       id: order._id,
-      car: `${order.car.make} ${order.car.model}`,
-      price: formatCurrency(order.car.price),
-      userEmail: order.user.email,
-      phone: order.user.phone,
+      user: order.user,
+      car: order.car,
       receipt: order.receiptNumber,
       type: order.type,
       period: order.period,
+      totalAmount: order.totalAmount,
       createdAt: formatDate(order.createdAt),
       deliveryDate: formatDate(order.deliveryDate),
+      buyer: order.buyer,
+      installmentPlan: order.installmentPlan || null
     })));
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -116,6 +122,26 @@ exports.getOrderStats = async (req, res) => {
     }));
 
     res.json(formattedStats);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getSalesChart = async (req, res) => {
+  try {
+    const chart = await Order.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          total: { $sum: "$totalAmount" }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.json(chart);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

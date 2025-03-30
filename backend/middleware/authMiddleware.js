@@ -32,4 +32,5 @@ const protect = (allowedRoles = []) => async (req, res, next) => {
   }
 };
 
+// ✅ Use named export to match routes
 module.exports = protect;

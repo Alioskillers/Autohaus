@@ -32,6 +32,9 @@ app.use('/api/recommendations', require('./routes/recommendationRoutes'));
 app.use('/api/admin/orders', require('./routes/adminOrderRoutes'));
 app.use('/api/admin/audit-logs', require('./routes/auditLogRoutes'));
 app.use('/api/admin/users', require('./routes/adminUserRoutes'));
+app.use('/api/basket', require('./routes/basketRoutes'));
+app.use('/api/installments', require('./routes/installmentRoutes'));
+app.use('/api/payments', require('./routes/paymentRoutes'));
 
 // ✅ Serve frontend static build
 app.use(express.static(path.join(__dirname, '../frontend/build')));

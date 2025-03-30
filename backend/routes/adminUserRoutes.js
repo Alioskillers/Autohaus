@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const protect = require('../middleware/authMiddleware');
+const protect = require('../middleware/authMiddleware'); // ✅ default import
 const User = require('../models/User');
 
 // Admin: Get all users

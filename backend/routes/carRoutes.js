@@ -1,6 +1,6 @@
 const express = require('express');
 const { getAllCars, getCarById, createCar, updateCarStockOrPrice} = require('../controllers/carController');
-const protect = require('../middleware/authMiddleware');
+const protect = require('../middleware/authMiddleware'); // ✅ default import
 
 const router = express.Router();
 

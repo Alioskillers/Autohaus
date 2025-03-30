@@ -1,55 +1,70 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axiosConfig';
-import { Link } from 'react-router-dom';
 
 const UserDashboard = () => {
   const [orders, setOrders] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
+  const [recommended, setRecommended] = useState([]);
 
   useEffect(() => {
-    axios.get('/orders/my-orders').then(res => setOrders(res.data));
-    axios.get('/recommendations').then(res => setRecommendations(res.data));
+    axios.get('/orders/my-orders')
+      .then(res => {
+        if (Array.isArray(res.data)) setOrders(res.data);
+        else console.warn('Unexpected orders response:', res.data);
+      })
+      .catch(err => console.error('Order fetch error:', err));
+
+    axios.get('/recommendations')
+      .then(res => {
+        if (Array.isArray(res.data)) setRecommended(res.data);
+        else console.warn('Unexpected recommendations response:', res.data);
+      })
+      .catch(err => console.error('Recommendation fetch error:', err));
   }, []);
 
   return (
-    <div className="container">
-      <h1>Your Dashboard</h1>
+    <div style={{ padding: '3rem', backgroundColor: '#f4f4f4', fontFamily: 'Helvetica Neue, sans-serif' }}>
+      <h1 style={{ fontSize: '2rem', marginBottom: '2rem', color: '#111', textAlign: 'center' }}>Welcome</h1>
 
-      <section>
-        <h2>Past Orders</h2>
-        {orders.length === 0 ? (
-          <p>No orders found.</p>
+      <section style={{ marginBottom: '3rem' }}>
+        <h2 style={{ fontSize: '1.5rem', color: '#111', marginBottom: '1rem' }}>Your Orders</h2>
+        {Array.isArray(orders) && orders.length === 0 ? (
+          <p>No orders yet.</p>
         ) : (
-          <ul>
-            {orders.map((order) => (
-              <li key={order._id}>
-                {order.car.make} {order.car.model} — {order.type} — Receipt: {order.receiptNumber}
-              </li>
-            ))}
-          </ul>
+          Array.isArray(orders) && orders.map(order => (
+            <div key={order._id} style={cardStyle}>
+              <h3>{order.car?.make} {order.car?.model}</h3>
+              <p>Type: {order.type}</p>
+              <p>Receipt: {order.receiptNumber}</p>
+              <p>Delivery: {new Date(order.deliveryDate).toLocaleDateString()}</p>
+            </div>
+          ))
         )}
       </section>
 
       <section>
-        <h2>Recommended For You</h2>
-        {recommendations.length === 0 ? (
-          <p>No recommendations yet.</p>
+        <h2 style={{ fontSize: '1.5rem', color: '#111', marginBottom: '1rem' }}>Recommended for You</h2>
+        {Array.isArray(recommended) && recommended.length === 0 ? (
+          <p>No recommendations available.</p>
         ) : (
-          <ul>
-            {recommendations.map((car) => (
-              <li key={car._id}>
-                {car.make} {car.model} - ${car.price}
-              </li>
-            ))}
-          </ul>
+          Array.isArray(recommended) && recommended.map(car => (
+            <div key={car._id} style={cardStyle}>
+              <h3>{car.make} {car.model}</h3>
+              <p>Price: ${car.price.toLocaleString()}</p>
+              <p>Top Speed: {car.topSpeed} km/h</p>
+            </div>
+          ))
         )}
       </section>
-
-      <Link to="/cars">
-        <button>Browse All Cars</button>
-      </Link>
     </div>
   );
+};
+
+const cardStyle = {
+  backgroundColor: '#fff',
+  borderRadius: '10px',
+  padding: '1.5rem',
+  marginBottom: '1rem',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
 };
 
 export default UserDashboard;

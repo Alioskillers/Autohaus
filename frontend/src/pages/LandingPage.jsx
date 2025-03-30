@@ -6,35 +6,71 @@ const LandingPage = () => {
 
   useEffect(() => {
     const fetchCars = async () => {
-    const response = await fetch('/api/cars');
-      const data = await response.json();
-      setCars(data);
+      try {
+        const response = await fetch('/api/cars');
+        const data = await response.json();
+        setCars(data);
+      } catch (error) {
+        console.error('Failed to fetch cars:', error);
+      }
     };
 
     fetchCars();
   }, []);
 
   return (
-    <div style={{ marginTop: '4rem' }}>
-  <h2>Featured Cars</h2>
-  <div className="car-grid" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-    {cars.map(car => (
-      <div key={car._id} className="car-card" style={{ border: '1px solid #ccc', margin: '1rem', padding: '1rem', width: '300px' }}>
-        <h3>{car.make} {car.model}</h3>
-        {car.image && (
-          <img
-          src={car.image}
-          alt={`${car.make} ${car.model}`}
-          style={{ width: '100%', height: 'auto' }}
-        />
-        )}
-        <p>Price: ${car.price.toLocaleString()}</p>
-        <p>Top Speed: {car.topSpeed} km/h</p>
+    <div style={{ padding: '3rem 1.5rem', fontFamily: 'Helvetica Neue, sans-serif', backgroundColor: '#f7f7f7', minHeight: '100vh' }}>
+      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <h1 style={{ fontSize: '3rem', color: '#111', marginBottom: '1rem' }}>Welcome to Autohaus</h1>
+        <p style={{ fontSize: '1.2rem', color: '#555' }}>Explore and rent or purchase high-end cars.</p>
+        <div style={{ marginTop: '2rem' }}>
+          <Link to="/signup">
+            <button style={buttonStyle}>Sign Up</button>
+          </Link>
+        </div>
       </div>
-    ))}
-  </div>
-</div>
+
+      <div>
+        <h2 style={{ fontSize: '2rem', color: '#111', marginBottom: '1.5rem', textAlign: 'center' }}>Featured Cars</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '2rem' }}>
+          {cars.map((car) => (
+            <div key={car._id} style={{
+              backgroundColor: '#fff',
+              borderRadius: '10px',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+              width: '300px',
+              textAlign: 'center',
+              overflow: 'hidden'
+            }}>
+              {car.image && (
+                <img
+                  src={car.image}
+                  alt={`${car.make} ${car.model}`}
+                  style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                />
+              )}
+              <div style={{ padding: '1rem' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '0', color: '#111' }}>
+                  {car.make} {car.model}
+                </h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
+};
+
+const buttonStyle = {
+  padding: '0.75rem 1.5rem',
+  backgroundColor: '#000',
+  color: '#fff',
+  fontSize: '1rem',
+  border: 'none',
+  borderRadius: '6px',
+  cursor: 'pointer',
+  fontWeight: 'bold'
 };
 
 export default LandingPage;
