@@ -23,17 +23,13 @@ const CarDetails = () => {
     setShowBuyerForm(true);
   };
 
-  const handleAddToBasket = () => {
-    addToBasket(car, quantity);
-  };
-
   const handleSubmitOrder = async (buyer) => {
     try {
       const body = {
         carId: car._id,
         type,
         ...(type === 'rent' && { period }),
-        buyer  // ✅ INCLUDE buyer object here
+        buyer
       };
 
       const res = await axios.post('/orders', body);
@@ -103,14 +99,6 @@ const CarDetails = () => {
           🛒 Add to Basket
         </button>
       </div>
-
-      {!showBuyerForm ? (
-        <button onClick={handleStartOrder} style={button}>
-          {type === 'rent' ? 'Rent Now' : 'Purchase Now'}
-        </button>
-      ) : (
-        <BuyerInfoForm onSubmit={handleSubmitOrder} />
-      )}
     </div>
   );
 };
