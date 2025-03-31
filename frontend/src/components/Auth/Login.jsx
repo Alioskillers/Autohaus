@@ -18,8 +18,6 @@ const Login = () => {
     try {
       const res = await axios.post('/auth/login', formData);
       login(res.data.token, res.data.role);
-
-      // ✅ Redirect based on role
       const role = res.data.role;
       if (role === 'Admin') navigate('/admin');
       else if (role === 'Worker') navigate('/worker');
@@ -30,85 +28,167 @@ const Login = () => {
   };
 
   return (
-    <div style={containerStyle}>
-      <div style={formCard}>
-        <h2 style={heading}>Login</h2>
-        {error && <p style={errorStyle}>{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-          <button type="submit" style={buttonStyle}>Login</button>
-        </form>
+    <div style={{
+      display: 'flex',
+      minHeight: '100vh',
+      fontFamily: 'Helvetica Neue, sans-serif',
+      overflow: 'hidden'
+    }}>
+      {/* Image */}
+      <div style={{
+        flex: 1,
+        height: '100vh',
+        overflow: 'hidden'
+      }}>
+        <img
+          src="/login.jpg"
+          alt="Login Visual"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center'
+          }}
+        />
+      </div>
+
+      {/* Login Form */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fafafa',
+        padding: '2rem'
+      }}>
+        <div style={{ maxWidth: '380px', width: '100%' }}>
+          {/* Centered Logo */}
+          <h1 style={{
+            textAlign: 'center',
+            fontSize: '1.5rem',
+            letterSpacing: '1px',
+            fontWeight: 'bold',
+            marginBottom: '1.5rem'
+          }}>
+            AUTOHAUS
+          </h1>
+
+          <h2 style={{
+            fontSize: '1.75rem',
+            fontWeight: 600,
+            marginBottom: '1rem'
+          }}>
+            Welcome! Log in with your Autohaus ID
+          </h2>
+
+          <p style={{
+            fontSize: '0.9rem',
+            marginBottom: '1.5rem',
+            color: '#333'
+          }}>
+            Please enter the e-mail address and password you registered with.
+          </p>
+
+          {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+
+          <form onSubmit={handleSubmit}>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email address"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              style={{
+                width: '100%',
+                padding: '0.8rem',
+                borderRadius: '5px',
+                border: '1px solid #ccc',
+                marginBottom: '1rem',
+                fontSize: '1rem'
+              }}
+            />
+
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              style={{
+                width: '100%',
+                padding: '0.8rem',
+                borderRadius: '5px',
+                border: '1px solid #ccc',
+                marginBottom: '1.5rem',
+                fontSize: '1rem'
+              }}
+            />
+
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '0.9rem',
+                backgroundColor: '#000',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                marginBottom: '1.5rem'
+              }}
+            >
+              Login
+            </button>
+          </form>
+
+          {/* Separator */}
+          <div style={{
+  display: 'flex',
+  alignItems: 'center',
+  textAlign: 'center',
+  margin: '1.5rem 0',
+  color: '#aaa'
+}}>
+  <div style={{
+    flex: 1,
+    height: '1px',
+    backgroundColor: '#ccc'
+  }}></div>
+  <span style={{
+    margin: '0 1rem',
+    fontSize: '0.85rem'
+  }}>or</span>
+  <div style={{
+    flex: 1,
+    height: '1px',
+    backgroundColor: '#ccc'
+  }}></div>
+</div>
+          {/* Signup Button */}
+          <button
+            onClick={() => navigate('/signup')}
+            style={{
+              width: '100%',
+              padding: '0.8rem',
+              border: '1px solid #000',
+              background: 'transparent',
+              color: '#000',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Don’t have an Autohaus ID? <strong>Sign up</strong>
+          </button>
+        </div>
       </div>
     </div>
   );
-};
-
-// Styles
-const containerStyle = {
-  backgroundColor: '#f4f4f4',
-  minHeight: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  fontFamily: 'Helvetica Neue, sans-serif'
-};
-
-const formCard = {
-  backgroundColor: '#fff',
-  padding: '3rem',
-  borderRadius: '12px',
-  boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-  width: '100%',
-  maxWidth: '480px'
-};
-
-const heading = {
-  textAlign: 'center',
-  marginBottom: '2rem',
-  fontSize: '2rem',
-  color: '#111'
-};
-
-const inputStyle = {
-  display: 'block',
-  width: '100%',
-  padding: '0.75rem',
-  marginBottom: '1.25rem',
-  fontSize: '1rem',
-  borderRadius: '6px',
-  border: '1px solid #ccc'
-};
-
-const buttonStyle = {
-  width: '100%',
-  padding: '0.9rem',
-  backgroundColor: '#000',
-  color: '#fff',
-  fontSize: '1rem',
-  fontWeight: 'bold',
-  border: 'none',
-  borderRadius: '6px',
-  cursor: 'pointer'
-};
-
-const errorStyle = {
-  color: 'red',
-  marginBottom: '1rem'
 };
 
 export default Login;
