@@ -25,6 +25,7 @@ import ProtectedRoute from './auth/ProtectedRoute';
 import SearchOrdersPage from './pages/SearchOrdersPage';
 import CheckoutPage from './pages/CheckoutPage';
 import InstallmentPage from './pages/InstallmentPage';
+import CardPaymentPage from './pages/CardPaymentPage';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -77,6 +78,14 @@ const AppContent = () => {
     <InstallmentPage />
   </ProtectedRoute>
 } />
+<Route
+  path="/card-payment"
+  element={
+    <ProtectedRoute allowedRoles={['User']}>
+      <CardPaymentPage />
+    </ProtectedRoute>
+  }
+/>
         <Route path="/admin" element={
           <ProtectedRoute allowedRoles={['Admin']}>
             <AdminDashboard />

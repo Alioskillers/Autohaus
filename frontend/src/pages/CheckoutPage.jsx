@@ -37,28 +37,21 @@ const CheckoutPage = () => {
     }
   
     if (paymentType === 'installment') {
-      navigate('/installment', {
-        state: { buyer, totalAmount, carId }
-      });
-    } else {
-      try {
-        const formattedBasket = basket.map(item => ({
-          carId: item.car._id,
-          quantity: item.quantity
-        }));
-  
-        const response = await axios.post('/payments/card', {
-          buyer,
-          basket: formattedBasket
+        navigate('/installment', {
+          state: { buyer, totalAmount, carId }
         });
-  
-        clearBasket();
-        navigate('/order-success', { state: response.data });
-      } catch (err) {
-        console.error('Card payment error:', err);
-      }
+      } else {
+        navigate('/card-payment', {
+          state: {
+            buyer,
+            basket: basket.map(item => ({
+              carId: item.car._id,
+              quantity: item.quantity
+            }))
+          }
+        });
+        }
     }
-  };
 
   return (
     <div style={styles.container}>
