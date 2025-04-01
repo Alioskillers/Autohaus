@@ -26,6 +26,8 @@ import SearchOrdersPage from './pages/SearchOrdersPage';
 import CheckoutPage from './pages/CheckoutPage';
 import InstallmentPage from './pages/InstallmentPage';
 import CardPaymentPage from './pages/CardPaymentPage';
+import ForgotPassword from './components/Auth/ForgotPassword';
+import ResetPassword from './components/Auth/ResetPassword';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -86,6 +88,9 @@ const AppContent = () => {
     </ProtectedRoute>
   }
 />
+<Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password" element={<ResetPassword />} />
+
         <Route path="/admin" element={
           <ProtectedRoute allowedRoles={['Admin']}>
             <AdminDashboard />

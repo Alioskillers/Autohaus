@@ -1,8 +1,13 @@
 const express = require('express');
-const { register, login } = require('../controllers/authController');
+const jwt = require('jsonwebtoken');
+const {
+  register,
+  login
+} = require('../controllers/authController');
+
 const router = express.Router();
 
-router.post('/register', register); // for users only
+router.post('/register', register); // Only for Users
 router.post('/login', login);
 
 module.exports = router;

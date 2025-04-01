@@ -4,6 +4,7 @@ const connectDB = require('./config/db');
 const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
+const authRoutes = require('./routes/authRoutes');
 
 dotenv.config();
 connectDB();
@@ -35,6 +36,7 @@ app.use('/api/admin/users', require('./routes/adminUserRoutes'));
 app.use('/api/basket', require('./routes/basketRoutes'));
 app.use('/api/installments', require('./routes/installmentRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
+app.use('/api/forgot-password', require('./routes/forgotPasswordRoutes'));
 
 // ✅ Serve frontend static build
 app.use(express.static(path.join(__dirname, '../frontend/build')));

@@ -35,11 +35,7 @@ const Login = () => {
       overflow: 'hidden'
     }}>
       {/* Image */}
-      <div style={{
-        flex: 1,
-        height: '100vh',
-        overflow: 'hidden'
-      }}>
+      <div style={{ flex: 1, height: '100vh', overflow: 'hidden' }}>
         <img
           src="/login.jpg"
           alt="Login Visual"
@@ -62,7 +58,6 @@ const Login = () => {
         padding: '2rem'
       }}>
         <div style={{ maxWidth: '380px', width: '100%' }}>
-          {/* Centered Logo */}
           <h1 style={{
             textAlign: 'center',
             fontSize: '1.5rem',
@@ -121,7 +116,7 @@ const Login = () => {
                 padding: '0.8rem',
                 borderRadius: '5px',
                 border: '1px solid #ccc',
-                marginBottom: '1.5rem',
+                marginBottom: '0.5rem',
                 fontSize: '1rem'
               }}
             />
@@ -145,29 +140,36 @@ const Login = () => {
             </button>
           </form>
 
+          <p style={{ textAlign: 'center', marginTop: '1rem' }}>
+  <button
+    onClick={() => navigate('/forgot-password')}
+    style={{
+      background: 'none',
+      border: 'none',
+      color: '#000',
+      fontSize: '0.95rem',
+      cursor: 'pointer',
+      textDecoration: 'underline',
+      fontWeight: '500'
+    }}
+  >
+    Forgot your password?
+  </button>
+</p>
+
           {/* Separator */}
           <div style={{
-  display: 'flex',
-  alignItems: 'center',
-  textAlign: 'center',
-  margin: '1.5rem 0',
-  color: '#aaa'
-}}>
-  <div style={{
-    flex: 1,
-    height: '1px',
-    backgroundColor: '#ccc'
-  }}></div>
-  <span style={{
-    margin: '0 1rem',
-    fontSize: '0.85rem'
-  }}>or</span>
-  <div style={{
-    flex: 1,
-    height: '1px',
-    backgroundColor: '#ccc'
-  }}></div>
-</div>
+            display: 'flex',
+            alignItems: 'center',
+            textAlign: 'center',
+            margin: '1.5rem 0',
+            color: '#aaa'
+          }}>
+            <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }} />
+            <span style={{ margin: '0 1rem', fontSize: '0.85rem' }}>or</span>
+            <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }} />
+          </div>
+
           {/* Signup Button */}
           <button
             onClick={() => navigate('/signup')}
