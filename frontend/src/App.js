@@ -4,6 +4,7 @@ import { AuthProvider } from './auth/AuthContext';
 import { BasketProvider } from './context/BasketContext';
 import { useBasket } from './context/BasketContext';
 
+
 // Shared
 import Navbar from './components/Shared/Navbar';
 import BasketModal from './components/Basket/BasketModal'; // ✅ optional if created
@@ -28,6 +29,8 @@ import InstallmentPage from './pages/InstallmentPage';
 import CardPaymentPage from './pages/CardPaymentPage';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import ResetPassword from './components/Auth/ResetPassword';
+import AddCarPage from './pages/AddCarPage';
+
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -90,6 +93,12 @@ const AppContent = () => {
 />
 <Route path="/forgot-password" element={<ForgotPassword />} />
 <Route path="/reset-password" element={<ResetPassword />} />
+
+<Route path="/add-car" element={
+          <ProtectedRoute allowedRoles={['Worker']}>
+            <AddCarPage />
+          </ProtectedRoute>
+        } />
 
         <Route path="/admin" element={
           <ProtectedRoute allowedRoles={['Admin']}>

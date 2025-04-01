@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../api/axiosConfig';
-import BuyerInfoForm from '../components/Buyer/BuyerInfoForm';
 import { useBasket } from '../context/BasketContext';
 
 const CarDetails = () => {

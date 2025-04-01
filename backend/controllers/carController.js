@@ -20,14 +20,29 @@ exports.getCarById = async (req, res) => {
   }
 };
 
-exports.createCar = async (req, res) => {
+exports.addCar = async (req, res) => {
+  const { make, model, color, price, topSpeed, stock, image } = req.body;
+
+  if (!make || !model || !color || !price || !topSpeed || !stock || !image) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
   try {
-    const { make, build, model, color, price, topSpeed, stock, image } = req.body;
-    const newCar = new Car({ make, build, model, color, price, topSpeed, stock, image });
+    const newCar = new Car({
+      make,
+      model,
+      color,
+      price,
+      topSpeed,
+      stock,
+      image,
+    });
+
     await newCar.save();
-    res.status(201).json(newCar);
+    res.status(201).json({ message: 'Car added successfully', car: newCar });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error('Error while adding car:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -60,15 +75,13 @@ exports.updateCarStockOrPrice = async (req, res) => {
         return res.status(404).json({ message: 'Car not found' });
       }
   
-      // ✅ Save audit log to DB
 await AuditLog.create({
     userEmail: who,
     carId: updated._id,
     updates: updateFields
   });
   
-  const fullCar = req.query.full === 'true';
-      // ✅ Return cleaner response
+  exports.fullCar = req.query.full === 'true';
       res.json({
         message: 'Car updated successfully',
         carId: updated._id,

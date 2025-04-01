@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../api/axiosConfig';
 
 const WorkerDashboard = () => {
   const [cars, setCars] = useState([]);
   const [stockUpdates, setStockUpdates] = useState({});
   const [discounts, setDiscounts] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCars();
@@ -49,9 +51,31 @@ const WorkerDashboard = () => {
     }
   };
 
+  const handleAddCarClick = () => {
+    navigate('/add-car'); // Navigate to the add car page
+  };
+
   return (
     <div style={container}>
       <h1 style={heading}>Worker Dashboard</h1>
+
+      {/* Add Car Button */}
+      <button
+        onClick={handleAddCarClick}
+        style={{
+          padding: '0.75rem 1.25rem',
+          backgroundColor: '#28a745',
+          color: '#fff',
+          fontSize: '1rem',
+          fontWeight: 'bold',
+          border: 'none',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          marginBottom: '1.5rem'
+        }}
+      >
+        Add a New Car
+      </button>
 
       <section>
         <h2 style={subheading}>Car Stock Overview</h2>
