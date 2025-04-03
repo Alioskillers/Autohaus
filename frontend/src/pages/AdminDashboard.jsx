@@ -3,9 +3,10 @@ import TotalSales from '../components/Admin/TotalSales';
 import SalesChart from '../components/Admin/SalesChart';
 import OrderList from '../components/Admin/OrderList';
 import AuditLogViewer from '../components/Admin/AuditLogViewer';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   return (
     <div style={container}>
       <h1 style={heading}>Admin Dashboard</h1>
@@ -23,6 +24,21 @@ const AdminDashboard = () => {
           <button style={button}>🔍 Search Orders</button>
         </Link>
       </div>
+
+      <button 
+        onClick={() => navigate('/admin/verify-password')}
+        style={{
+          padding: '0.75rem 1.5rem',
+          backgroundColor: '#007bff',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          marginRight: '1rem'
+        }}
+      >
+        Set VIP Access Password
+      </button>
     </div>
   );
 };

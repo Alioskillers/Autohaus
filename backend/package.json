@@ -14,11 +14,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-session": "^1.18.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.15.0",
     "mongoose": "^8.13.1",
-    "recharts": "^2.15.1"
+    "recharts": "^2.15.1",
+    "session": "^0.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

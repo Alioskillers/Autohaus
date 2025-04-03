@@ -26,7 +26,7 @@ const login = async (req, res) => {
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: 'Invalid credentials' });
-
+    req.session.userId = user._id;
     const token = generateToken(user._id, user.role);
     res.json({ token, role: user.role });
   } catch (err) {

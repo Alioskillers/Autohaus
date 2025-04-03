@@ -3,13 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthContext';
 import { BasketProvider } from './context/BasketContext';
 import { useBasket } from './context/BasketContext';
+import { useAuth } from './auth/AuthContext';
 
-
-// Shared
+// Shared Components
 import Navbar from './components/Shared/Navbar';
-import BasketModal from './components/Basket/BasketModal'; // ✅ optional if created
+import BasketModal from './components/Basket/BasketModal';
 
-// Auth
+// Auth Components
 import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
 
@@ -30,7 +30,10 @@ import CardPaymentPage from './pages/CardPaymentPage';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import ResetPassword from './components/Auth/ResetPassword';
 import AddCarPage from './pages/AddCarPage';
-
+import VIPPage from './pages/VIPPage';
+import VIPAccessPage from './pages/VIPAccessPage';
+import AdminVerifyPage from './pages/AdminVerifyPage';
+import AdminVipSettingsPage from './pages/AdminVipSettingsPage';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -53,6 +56,29 @@ const AppContent = () => {
             <UserDashboard />
           </ProtectedRoute>
         } />
+        <Route path="/vip" element={
+          <ProtectedRoute allowedRoles={['User']}>
+            <VIPPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/vip-access" element={
+          <ProtectedRoute allowedRoles={['User']}>
+            <VIPAccessPage />
+          </ProtectedRoute>
+        } />
+        <Route 
+  path="/admin/verify-password" 
+  element={
+    <ProtectedRoute allowedRoles={['Admin']}>
+      <AdminVerifyPage />
+    </ProtectedRoute>
+  } 
+/>
+<Route path="/admin/vip-settings" element={
+  <ProtectedRoute allowedRoles={['Admin']}>
+    <AdminVipSettingsPage />
+  </ProtectedRoute>
+} />
         <Route path="/cars" element={
           <ProtectedRoute allowedRoles={['User']}>
             <BrowseCars />
@@ -68,38 +94,28 @@ const AppContent = () => {
             <OrderSuccess />
           </ProtectedRoute>
         } />
-<Route path="/checkout" element={
-    <ProtectedRoute allowedRoles={['User']}>
-      <CheckoutPage />
-    </ProtectedRoute>
-  } />
-  <Route path="/checkout" element={
-  <ProtectedRoute allowedRoles={['User']}>
-    <CheckoutPage />
-  </ProtectedRoute>
-} />
-<Route path="/installment" element={
-  <ProtectedRoute allowedRoles={['User']}>
-    <InstallmentPage />
-  </ProtectedRoute>
-} />
-<Route
-  path="/card-payment"
-  element={
-    <ProtectedRoute allowedRoles={['User']}>
-      <CardPaymentPage />
-    </ProtectedRoute>
-  }
-/>
-<Route path="/forgot-password" element={<ForgotPassword />} />
-<Route path="/reset-password" element={<ResetPassword />} />
-
-<Route path="/add-car" element={
+        <Route path="/checkout" element={
+          <ProtectedRoute allowedRoles={['User']}>
+            <CheckoutPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/installment" element={
+          <ProtectedRoute allowedRoles={['User']}>
+            <InstallmentPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/card-payment" element={
+          <ProtectedRoute allowedRoles={['User']}>
+            <CardPaymentPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/add-car" element={
           <ProtectedRoute allowedRoles={['Worker']}>
             <AddCarPage />
           </ProtectedRoute>
         } />
-
         <Route path="/admin" element={
           <ProtectedRoute allowedRoles={['Admin']}>
             <AdminDashboard />

@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 const carRoutes = require('./routes/carRoutes');
+const session = require('express-session');
 
 
 dotenv.config();
@@ -25,6 +26,20 @@ app.use(
   );
 app.use(cors());
 
+app.use(session({
+  secret: 'process.env.SESSION_SECRET',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
+
+
+const vipAccessRoutes = require('./routes/vipAccess');
+const adminRoutes = require('./routes/adminRoutes');
+const vipRoutes = require('./routes/vip');
+
+
+
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/recommendations', require('./routes/recommendationRoutes'));
@@ -36,6 +51,9 @@ app.use('/api/installments', require('./routes/installmentRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
 app.use('/api/forgot-password', require('./routes/forgotPasswordRoutes'));
 app.use('/api/cars', carRoutes);
+app.use('/api', adminRoutes);
+app.use('/api', vipAccessRoutes);
+app.use('/api/vip', vipRoutes);
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 

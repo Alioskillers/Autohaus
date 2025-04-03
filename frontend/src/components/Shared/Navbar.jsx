@@ -27,6 +27,9 @@ const Navbar = () => {
 
         {isAuthenticated ? (
           <>
+          <button onClick={() => navigate('/vip-access')} style={{linkStyle}}>
+        VIP Cars
+      </button>
             <button
               onClick={logout}
               style={linkButtonStyle}
@@ -62,6 +65,7 @@ const logoStyle = {
 };
 
 const linkStyle = {
+  backgroundColor:'#000',
   marginLeft: '1.5rem',
   textDecoration: 'none',
   color: '#fff',
