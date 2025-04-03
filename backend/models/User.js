@@ -7,6 +7,13 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['User', 'Worker', 'Admin', 'VIP'], default: 'User' },
   oldPurchases: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
   totalOrders: { type: Number, default: 0 },
+  username: {
+    type: String,
+    unique: true,
+    required: function () {
+      return this.role === 'Admin';
+    }
+  },
 }, { timestamps: true });
 
 userSchema.methods.addOrderAmount = async function(amount) {

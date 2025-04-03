@@ -1,12 +1,10 @@
-// /src/pages/AdminVerifyPage.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const AdminVerifyPage = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  //const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,7 +17,7 @@ const AdminVerifyPage = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('/api/admin/verify-password', { email, password });
+      const response = await axios.post('/api/admin/verify-password', { username, password });
       if (response.data.message === 'Verification successful') {
         navigate('/admin/vip-settings');
       } else {
@@ -43,11 +41,11 @@ const AdminVerifyPage = () => {
             {message && <p style={styles.success}>{message}</p>}
             <form onSubmit={handleVerify}>
             <input
-              name="email"
-              type="email"
-              placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="username"
+              type="username"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               style={styles.input}
             />
