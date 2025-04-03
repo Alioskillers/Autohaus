@@ -29,7 +29,7 @@ const AdminDashboard = () => {
         onClick={() => navigate('/admin/verify-password')}
         style={{
           padding: '0.75rem 1.5rem',
-          backgroundColor: '#007bff',
+          backgroundColor: '#000',
           color: '#fff',
           border: 'none',
           borderRadius: '4px',
@@ -39,6 +39,19 @@ const AdminDashboard = () => {
       >
         Set VIP Access Password
       </button>
+
+      <button
+  onClick={() => navigate('/admin/verify-new-admin')}
+  style={{ padding: '0.75rem 1.5rem',
+    backgroundColor: '#000',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginRight: '1rem'}}
+>
+  Add New Admin
+</button>
     </div>
   );
 };

@@ -13,7 +13,7 @@ router.post('/admin/verify-password', async (req, res) => {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      if (user.role !== 'Admin') {
+      if (user.role !== 'Admin' && user.role !== 'Global-Admin') {
         return res.status(403).json({ message: 'User is not authorized as admin' });
       }
   

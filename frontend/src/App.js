@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthContext';
 import { BasketProvider } from './context/BasketContext';
 import { useBasket } from './context/BasketContext';
-import { useAuth } from './auth/AuthContext';
 
 // Shared Components
 import Navbar from './components/Shared/Navbar';
@@ -35,6 +34,8 @@ import VIPAccessPage from './pages/VIPAccessPage';
 import AdminVerifyPage from './pages/AdminVerifyPage';
 import AdminVipSettingsPage from './pages/AdminVipSettingsPage';
 import VIPCarDetails from './pages/vipCarDetails';
+import VerifyNewAdmin from './pages/VerifyNewAdmin';
+import CreateNewAdmin from './pages/CreateNewAdmin';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -45,7 +46,7 @@ const AppContent = () => {
       {showBasket && <BasketModal isOpen={showBasket} onClose={toggleBasketModal} />}
       <Routes>
         <Route path="/admin/orders" element={
-          <ProtectedRoute allowedRoles={['Admin']}>
+          <ProtectedRoute allowedRoles={['Admin','Global-Admin']}>
             <SearchOrdersPage />
           </ProtectedRoute>
         } />
@@ -53,7 +54,7 @@ const AppContent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={
-          <ProtectedRoute allowedRoles={['User']}>
+          <ProtectedRoute allowedRoles={['User',]}>
             <UserDashboard />
           </ProtectedRoute>
         } />
@@ -70,14 +71,24 @@ const AppContent = () => {
         <Route 
   path="/admin/verify-password" 
   element={
-    <ProtectedRoute allowedRoles={['Admin']}>
+    <ProtectedRoute allowedRoles={['Admin','Global-Admin']}>
       <AdminVerifyPage />
     </ProtectedRoute>
   } 
 />
 <Route path="/admin/vip-settings" element={
-  <ProtectedRoute allowedRoles={['Admin']}>
+  <ProtectedRoute allowedRoles={['Admin','Global-Admin']}>
     <AdminVipSettingsPage />
+  </ProtectedRoute>
+} />
+<Route path="/admin/verify-new-admin" element={
+  <ProtectedRoute allowedRoles={['Admin','Global-Admin']}>
+    <VerifyNewAdmin />
+  </ProtectedRoute>
+} />
+<Route path="/admin/create-new-admin" element={
+  <ProtectedRoute allowedRoles={['Global-Admin']}>
+    <CreateNewAdmin />
   </ProtectedRoute>
 } />
 <Route path="/vip/cars/:id" element={
@@ -123,7 +134,7 @@ const AppContent = () => {
           </ProtectedRoute>
         } />
         <Route path="/admin" element={
-          <ProtectedRoute allowedRoles={['Admin']}>
+          <ProtectedRoute allowedRoles={['Admin','Global-Admin']}>
             <AdminDashboard />
           </ProtectedRoute>
         } />

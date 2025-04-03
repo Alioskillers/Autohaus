@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', getAllCars);
 router.get('/:id', getCarById);
 
-router.post('/add-car', protect(['Admin', 'Worker']), addCar);
-router.put('/:id', protect(['Admin', 'Worker']), updateCarStockOrPrice);
+router.post('/add-car', protect(['Admin', 'Worker','Global-Admin']), addCar);
+router.put('/:id', protect(['Admin', 'Worker','Global-Admin']), updateCarStockOrPrice);
 
 module.exports = router;

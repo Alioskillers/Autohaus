@@ -19,7 +19,7 @@ const Login = () => {
       const res = await axios.post('/auth/login', formData);
       login(res.data.token, res.data.role);
       const role = res.data.role;
-      if (role === 'Admin') navigate('/admin');
+      if (role === 'Admin' || role==='Global-Admin') navigate('/admin');
       else if (role === 'Worker') navigate('/worker');
       else navigate('/dashboard');
     } catch (err) {
@@ -34,7 +34,6 @@ const Login = () => {
       fontFamily: 'Helvetica Neue, sans-serif',
       overflow: 'hidden'
     }}>
-      {/* Image */}
       <div style={{ flex: 1, height: '100vh', overflow: 'hidden' }}>
         <img
           src="/login.jpg"
@@ -156,8 +155,6 @@ const Login = () => {
     Forgot your password?
   </button>
 </p>
-
-          {/* Separator */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -169,8 +166,6 @@ const Login = () => {
             <span style={{ margin: '0 1rem', fontSize: '0.85rem' }}>or</span>
             <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }} />
           </div>
-
-          {/* Signup Button */}
           <button
             onClick={() => navigate('/signup')}
             style={{
