@@ -8,8 +8,13 @@ const orderSchema = new mongoose.Schema({
   },
   car: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Car',
-    required: false
+    required: true,
+    refPath: 'carModelType'
+  },
+  carModelType: {
+    type: String,
+    required: true,
+    enum: ['Car', 'VipCar']
   },
   type: {
     type: String,

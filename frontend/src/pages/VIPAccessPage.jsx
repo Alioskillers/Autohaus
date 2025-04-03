@@ -74,7 +74,7 @@ const VIPAccessPage = () => {
               disabled={loading}
               style={styles.button}
             >
-              {loading ? 'Processing...' : 'Access'}
+              {loading ? 'Authenticating...' : 'Access'}
             </button>
           </form>
         </div>

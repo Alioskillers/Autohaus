@@ -3,17 +3,16 @@ import { useParams } from 'react-router-dom';
 import axios from '../api/axiosConfig';
 import { useBasket } from '../context/BasketContext';
 
-const CarDetails = () => {
+const VIPCarDetails = () => {
   const { id } = useParams();
   const { addToBasket } = useBasket();
-
   const [car, setCar] = useState(null);
   const [type, setType] = useState('purchase');
   const [period, setPeriod] = useState(1);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    axios.get(`/cars/${id}`).then(res => setCar(res.data));
+    axios.get(`/vip/cars/${id}`).then(res => setCar(res.data));
   }, [id]);
 
   if (!car) return <p>Loading car details...</p>;
@@ -80,7 +79,6 @@ const CarDetails = () => {
   );
 };
 
-// --- Styles ---
 const container = {
   padding: '2rem',
   maxWidth: '700px',
@@ -117,4 +115,4 @@ const button = {
   cursor: 'pointer'
 };
 
-export default CarDetails;
+export default VIPCarDetails;

@@ -1,6 +1,5 @@
-const VipCar = require('../models/VipCar'); // Ensure your VipCar model is defined correctly
+const VipCar = require('../models/VipCar');
 
-// GET /vip/cars - Fetch all VIP cars
 exports.getVipCars = async (req, res) => {
   try {
     const cars = await VipCar.find({});
@@ -8,5 +7,15 @@ exports.getVipCars = async (req, res) => {
   } catch (error) {
     console.error('Error fetching VIP cars:', error);
     return res.status(500).json({ message: 'Server error fetching VIP cars' });
+  }
+};
+
+exports.getVipCarById = async (req, res) => {
+  try {
+    const car = await VipCar.findById(req.params.id);
+    if (!car) return res.status(404).json({ message: 'Car not found' });
+    res.json(car);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

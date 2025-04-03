@@ -1,5 +1,6 @@
 const Order = require('../models/Order');
 const Car = require('../models/Car');
+const VipCar = require('../models/VipCar');
 
 const generateReceipt = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -10,7 +11,6 @@ const generateReceipt = () => {
   return receipt;
 };
 
-// ✅ Card Payment Logic
 const processCardPayment = async (req, res) => {
   try {
     const { basket, buyer } = req.body;
@@ -21,8 +21,17 @@ const processCardPayment = async (req, res) => {
     }
 
     for (const item of basket) {
-      const car = await Car.findById(item.carId);
-      if (!car) return res.status(404).json({ message: `Car with ID ${item.carId} not found` });
+      let car = await Car.findById(item.carId);
+      let carModelType = 'Car';
+
+      if (!car) {
+      car = await VipCar.findById(item.carId);
+      carModelType = 'VipCar';
+      }
+
+      if (!car) {
+      return res.status(404).json({ message: `Car with ID ${item.carId} not found` });
+      }
 
       if (car.stock < item.quantity) {
         return res.status(400).json({
@@ -41,6 +50,7 @@ const processCardPayment = async (req, res) => {
       const order = new Order({
         user: req.user._id,
         car: car._id,
+        carModelType,
         type: 'purchase',
         quantity: item.quantity,
         receiptNumber,
@@ -72,8 +82,17 @@ const processInstallmentPayment = async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    const car = await Car.findById(carId);
-    if (!car) return res.status(404).json({ message: 'Car not found' });
+    let car = await Car.findById(carId);
+    let carModelType = 'Car';
+
+    if (!car) {
+      car = await VipCar.findById(carId);
+      carModelType = 'VipCar';
+    }
+
+    if (!car) {
+      return res.status(404).json({ message: `Car with ID ${carId} not found` });
+    }
 
     if (car.stock <= 0) {
       return res.status(400).json({ message: 'This car is out of stock' });
@@ -86,7 +105,8 @@ const processInstallmentPayment = async (req, res) => {
 
     const order = new Order({
       user: req.user._id,
-      car: carId,
+      car: car._id,
+      carModelType,
       type: 'installment',
       receiptNumber: receipt,
       deliveryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),

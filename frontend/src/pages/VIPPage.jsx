@@ -82,7 +82,6 @@ const VIPPage = () => {
               <p style={{ margin: '0.25rem 0', color: '#111', fontWeight: 'bold' }}>
                 Price: ${car.price.toLocaleString()}
               </p>
-              {/* Details page link for VIP cars */}
               <Link to={`/vip/cars/${car._id}`}>
                 <button
                   style={{

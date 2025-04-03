@@ -4,7 +4,6 @@ const connectDB = require('./config/db');
 const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
-const carRoutes = require('./routes/carRoutes');
 const session = require('express-session');
 
 
@@ -34,11 +33,6 @@ app.use(session({
 }));
 
 
-const vipAccessRoutes = require('./routes/vipAccess');
-const adminRoutes = require('./routes/adminRoutes');
-const vipRoutes = require('./routes/vip');
-
-
 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
@@ -50,10 +44,11 @@ app.use('/api/basket', require('./routes/basketRoutes'));
 app.use('/api/installments', require('./routes/installmentRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
 app.use('/api/forgot-password', require('./routes/forgotPasswordRoutes'));
-app.use('/api/cars', carRoutes);
-app.use('/api', adminRoutes);
-app.use('/api', vipAccessRoutes);
-app.use('/api/vip', vipRoutes);
+app.use('/api/cars', require('./routes/carRoutes'));
+app.use('/api', require('./routes/adminRoutes'));
+app.use('/api', require('./routes/vipAccess'));
+app.use('/api/vip', require('./routes/vip'));
+app.use('/api/vip/cars', require('./routes/vip'));
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 

@@ -1,7 +1,7 @@
 const Order = require('../models/Order');
 const Car = require('../models/Car');
+const VipCar = require('../models/VipCar');
 
-// Generate unique 8-character receipt number
 const generateReceiptNumber = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let receipt = '';
@@ -11,7 +11,6 @@ const generateReceiptNumber = () => {
   return receipt;
 };
 
-// Place a purchase (card) order
 exports.placePurchaseOrder = async (req, res) => {
   try {
     const { carId, buyer, installmentPlan } = req.body;
@@ -19,11 +18,17 @@ exports.placePurchaseOrder = async (req, res) => {
       return res.status(400).json({ message: 'Missing carId or buyer info' });
     }
 
-    const car = await Car.findById(carId);
+    let car = await Car.findById(carId);
+    let carModelType = 'Car';
+
+    if (!car) {
+      car = await VipCar.findById(carId);
+      carModelType = 'VipCar';
+    }
     if (!car) return res.status(404).json({ message: 'Car not found' });
 
     const receiptNumber = generateReceiptNumber();
-    const deliveryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000); // +3 days
+    const deliveryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
 
     const order = new Order({
       user: req.user._id,
@@ -44,7 +49,6 @@ exports.placePurchaseOrder = async (req, res) => {
   }
 };
 
-// Place a rental order
 exports.placeRentalOrder = async (req, res) => {
   try {
     const { carId, period, buyer, installmentPlan } = req.body;
@@ -52,7 +56,13 @@ exports.placeRentalOrder = async (req, res) => {
       return res.status(400).json({ message: 'Missing carId, period or buyer' });
     }
 
-    const car = await Car.findById(carId);
+    let car = await Car.findById(carId);
+    let carModelType = 'Car';
+
+    if (!car) {
+      car = await VipCar.findById(carId);
+      carModelType = 'VipCar';
+    }
     if (!car) return res.status(404).json({ message: 'Car not found' });
 
     const receiptNumber = generateReceiptNumber();
@@ -80,7 +90,6 @@ exports.placeRentalOrder = async (req, res) => {
   }
 };
 
-// Get all orders for logged-in user
 exports.getUserOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id }).populate('car');

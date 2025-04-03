@@ -34,6 +34,7 @@ import VIPPage from './pages/VIPPage';
 import VIPAccessPage from './pages/VIPAccessPage';
 import AdminVerifyPage from './pages/AdminVerifyPage';
 import AdminVipSettingsPage from './pages/AdminVipSettingsPage';
+import VIPCarDetails from './pages/vipCarDetails';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -79,6 +80,11 @@ const AppContent = () => {
     <AdminVipSettingsPage />
   </ProtectedRoute>
 } />
+<Route path="/vip/cars/:id" element={
+          <ProtectedRoute allowedRoles={['User']}>
+            <VIPCarDetails />
+          </ProtectedRoute>
+        } />
         <Route path="/cars" element={
           <ProtectedRoute allowedRoles={['User']}>
             <BrowseCars />
