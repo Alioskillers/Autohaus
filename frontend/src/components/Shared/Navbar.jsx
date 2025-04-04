@@ -18,7 +18,15 @@ const Navbar = () => {
   return (
     <nav style={navStyle}>
       <div style={leftSideStyle}>
-        <video
+      <video
+  ref={(ref) => {
+    if (ref) {
+      ref.onended = () => {
+        ref.currentTime = 0;
+        ref.play();
+      };
+    }
+  }}
           src="/logo.mp4"
           autoPlay
           loop
