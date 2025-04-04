@@ -19,61 +19,130 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <main style={{ paddingTop: '80px' }}>
-      <div style={{ padding: '3rem 1.5rem', fontFamily: 'Helvetica Neue, sans-serif', backgroundColor: '#f7f7f7', minHeight: '100vh' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h1 style={{ fontSize: '3rem', color: '#111', marginBottom: '1rem' }}>Welcome to Autohaus</h1>
-          <p style={{ fontSize: '1.2rem', color: '#555' }}>Explore and rent or purchase high-end cars.</p>
-          <div style={{ marginTop: '2rem' }}>
-            <Link to="/signup">
-              <button style={buttonStyle}>Sign Up</button>
-            </Link>
-          </div>
-        </div>
-
-        <section>
-          <h2 style={{ fontSize: '2rem', color: '#111', marginBottom: '1.5rem', textAlign: 'center' }}>Featured Cars</h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '2rem' }}>
-            {cars.map((car) => (
-              <div key={car._id} style={{
-                backgroundColor: '#fff',
-                borderRadius: '10px',
-                boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
-                width: '300px',
-                textAlign: 'center',
-                overflow: 'hidden'
-              }}>
-                {car.image && (
-                  <img
-                    src={car.image}
-                    alt={`${car.make} ${car.model}`}
-                    style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                  />
-                )}
-                <div style={{ padding: '1rem' }}>
-                  <h3 style={{ fontSize: '1.25rem', marginBottom: '0', color: '#111' }}>
-                    {car.make} {car.model}
-                  </h3>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+    <div>
+      <div
+        style={{
+          height: '100vh',
+          backgroundImage: `url("/background.avif")`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: '#fff',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          padding: '0 2rem',
+        }}
+      >
+        <h1 style={{ fontSize: '4rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+          Welcome to Autohaus
+        </h1>
+        <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>
+          Explore and rent or purchase high-end cars.
+        </p>
+        <Link to="/signup">
+          <button style={heroButtonStyle}>Get Started</button>
+        </Link>
       </div>
-    </main>
+      <div
+        style={{
+          padding: '3rem 1.5rem',
+          fontFamily: 'Helvetica Neue, sans-serif',
+          backgroundColor: '#f7f7f7',
+          minHeight: '100vh',
+        }}
+      >
+        <h2
+          style={{
+            fontSize: '2.5rem',
+            textAlign: 'center',
+            marginBottom: '2.5rem',
+            color: '#111',
+          }}
+        >
+          Featured Cars
+        </h2>
+        <div style={gridStyle}>
+          {cars.map((car) => (
+            <div
+              key={car._id}
+              style={{
+                ...cardStyle,
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.03)';
+                e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.1)';
+              }}
+            >
+              {car.image && (
+                <img
+                  src={car.image}
+                  alt={`${car.make} ${car.model}`}
+                  style={imageStyle}
+                />
+              )}
+              <div style={{ padding: '1rem' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#111' }}>
+                  {car.make} {car.model}
+                </h3>
+                <button style={exploreButtonStyle}>Explore</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
-const buttonStyle = {
-  padding: '0.75rem 1.5rem',
+const heroButtonStyle = {
+  padding: '0.9rem 2rem',
+  fontSize: '1.1rem',
+  backgroundColor: '#fff',
+  color: '#000',
+  border: 'none',
+  borderRadius: '4px',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  transition: 'background-color 0.3s',
+};
+
+const gridStyle = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  gap: '2rem',
+};
+
+const cardStyle = {
+  backgroundColor: '#fff',
+  borderRadius: '12px',
+  boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+  width: '300px',
+  textAlign: 'center',
+  overflow: 'hidden',
+};
+
+const imageStyle = {
+  width: '100%',
+  height: '200px',
+  objectFit: 'cover',
+};
+
+const exploreButtonStyle = {
+  padding: '0.5rem 1.2rem',
   backgroundColor: '#000',
   color: '#fff',
-  fontSize: '1rem',
   border: 'none',
   borderRadius: '6px',
-  cursor: 'pointer',
   fontWeight: 'bold',
-  transition: 'background-color 0.3s ease'
+  cursor: 'pointer',
 };
 
 export default LandingPage;
