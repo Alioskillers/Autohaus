@@ -42,21 +42,42 @@ const AuditLogViewer = () => {
       <h2>Audit Log Viewer</h2>
 
       <div style={{ marginBottom: '1rem' }}>
+  <input
+    type="email"
+    name="email"
+    placeholder="Filter by user email"
+    value={filters.email}
+    onChange={handleFilterChange}
+    style={{
+      padding: '0.6rem 1rem',
+      borderRadius: '6px',
+      border: '1px solid #ccc',
+      fontSize: '1rem',
+      width: '100%',
+      maxWidth: '300px',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+    }}
+  />
         <input
-          type="text"
-          name="email"
-          placeholder="Filter by user email"
-          value={filters.email}
-          onChange={handleFilterChange}
-        />
-        <input
-          type="text"
-          name="model"
-          placeholder="Filter by car model"
-          value={filters.model}
-          onChange={handleFilterChange}
-          style={{ marginLeft: '1rem' }}
-        />
+  type="text"
+  name="model"
+  placeholder="Filter by car model"
+  value={filters.model}
+  onChange={handleFilterChange}
+  style={{
+    marginLeft: '1rem',
+    padding: '0.6rem 1rem',
+    fontSize: '1rem',
+    borderRadius: '6px',
+    border: '1px solid #ccc',
+    outline: 'none',
+    width: '250px',
+    maxWidth: '100%',
+    backgroundColor: '#fff',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
+    transition: 'border-color 0.2s ease-in-out'
+  }}
+/>
       </div>
 
       <table>

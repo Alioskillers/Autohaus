@@ -38,6 +38,8 @@ import AdminVipSettingsPage from './pages/AdminVipSettingsPage';
 import VIPCarDetails from './pages/vipCarDetails';
 import VerifyNewAdmin from './pages/VerifyNewAdmin';
 import CreateNewAdmin from './pages/CreateNewAdmin';
+import VerifyManagement from './pages/VerifyManagement';
+import AdminManagement from './pages/AdminManagement';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -235,6 +237,20 @@ const AppContent = () => {
             </Layout>
           }
         />
+        <Route path="/admin/verify-management" element={
+          <Layout>
+  <ProtectedRoute allowedRoles={['Admin', 'Global-Admin']}>
+    <VerifyManagement />
+  </ProtectedRoute>
+</Layout>
+} />
+<Route path="/admin/manage" element={
+  <Layout>
+  <ProtectedRoute allowedRoles={['Admin', 'Global-Admin']}>
+    <AdminManagement />
+  </ProtectedRoute>
+</Layout>
+} />
       </Routes>
     </>
   );

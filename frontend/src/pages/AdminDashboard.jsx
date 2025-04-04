@@ -3,95 +3,103 @@ import TotalSales from '../components/Admin/TotalSales';
 import SalesChart from '../components/Admin/SalesChart';
 import OrderList from '../components/Admin/OrderList';
 import AuditLogViewer from '../components/Admin/AuditLogViewer';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+
   return (
-    <div style={container}>
-      <h1 style={heading}>Admin Dashboard</h1>
+    <div style={styles.container}>
+      <h1 style={styles.heading}>Admin Dashboard</h1>
 
-      <div style={grid}>
-        <div style={card}><TotalSales /></div>
-        <div style={card}><SalesChart /></div>
-      </div>
+      <section style={styles.section}>
+        <h2 style={styles.subheading}>Analytics Overview</h2>
+        <div style={styles.grid}>
+          <div style={styles.card}><TotalSales /></div>
+          <div style={styles.card}><SalesChart /></div>
+        </div>
+      </section>
 
-      <div style={card}><OrderList /></div>
-      <div style={card}><AuditLogViewer /></div>
+      <section style={styles.section}>
+        <h2 style={styles.subheading}>Recent Orders</h2>
+        <div style={styles.cardWide}>
+          <OrderList />
+        </div>
+      </section>
 
-      <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-        <Link to="/admin/orders">
-          <button style={button}>🔍 Search Orders</button>
-        </Link>
-      </div>
+      <section style={styles.section}>
+        <h2 style={styles.subheading}>System Audit Logs</h2>
+        <div style={styles.cardWide}>
+          <AuditLogViewer />
+        </div>
+      </section>
 
-      <button 
-        onClick={() => navigate('/admin/verify-password')}
-        style={{
-          padding: '0.75rem 1.5rem',
-          backgroundColor: '#000',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          marginRight: '1rem'
-        }}
-      >
-        Set VIP Access Password
-      </button>
-
-      <button
-  onClick={() => navigate('/admin/verify-new-admin')}
-  style={{ padding: '0.75rem 1.5rem',
-    backgroundColor: '#000',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    marginRight: '1rem'}}
->
-  Add New Admin
-</button>
+      <section style={styles.section}>
+        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+          <button
+            onClick={() => navigate('/admin/verify-management')}
+            style={styles.managementButton}
+          >
+            Management
+          </button>
+        </div>
+      </section>
     </div>
   );
 };
 
-const container = {
-  padding: '3rem',
-  backgroundColor: '#f4f4f4',
-  fontFamily: 'Helvetica Neue, sans-serif'
-};
-
-const heading = {
-  fontSize: '2rem',
-  marginBottom: '2rem',
-  color: '#111'
-};
-
-const grid = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '2rem',
-  marginBottom: '2rem'
-};
-
-const card = {
-  backgroundColor: '#fff',
-  borderRadius: '10px',
-  padding: '2rem',
-  boxShadow: '0 6px 16px rgba(0,0,0,0.05)',
-  flex: '1 1 48%'
-};
-
-const button = {
-  padding: '0.75rem 1.5rem',
-  backgroundColor: '#000',
-  color: '#fff',
-  fontWeight: 'bold',
-  fontSize: '1rem',
-  borderRadius: '6px',
-  border: 'none',
-  cursor: 'pointer'
+const styles = {
+  container: {
+    padding: '3rem',
+    backgroundColor: '#f4f4f4',
+    fontFamily: 'Helvetica Neue, sans-serif',
+    minHeight: '100vh'
+  },
+  heading: {
+    fontSize: '2.5rem',
+    textAlign: 'center',
+    color: '#000',
+    marginBottom: '2.5rem'
+  },
+  subheading: {
+    fontSize: '1.6rem',
+    color: '#222',
+    fontWeight: 'bold',
+    marginBottom: '1.25rem'
+  },
+  section: {
+    marginBottom: '3.5rem'
+  },
+  grid: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '2rem'
+  },
+  card: {
+    backgroundColor: '#fff',
+    padding: '2rem',
+    borderRadius: '10px',
+    boxShadow: '0 6px 16px rgba(0,0,0,0.05)',
+    flex: '1 1 48%'
+  },
+  cardWide: {
+    backgroundColor: '#fff',
+    padding: '2rem',
+    borderRadius: '10px',
+    boxShadow: '0 6px 16px rgba(0,0,0,0.07)',
+    width: '100%',
+    overflowX: 'auto'
+  },
+  managementButton: {
+    padding: '0.85rem 2rem',
+    backgroundColor: '#000',
+    color: '#fff',
+    fontSize: '1.1rem',
+    fontWeight: 'bold',
+    borderRadius: '6px',
+    border: 'none',
+    cursor: 'pointer'
+  }
 };
 
 export default AdminDashboard;
