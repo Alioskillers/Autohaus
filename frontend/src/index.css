@@ -21,9 +21,16 @@ body {
 
 /* Navbar */
 nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
   background-color: #000000;
   color: #fff;
-  padding: 1rem;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 nav a {

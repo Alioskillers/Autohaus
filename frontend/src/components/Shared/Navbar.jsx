@@ -17,40 +17,31 @@ const Navbar = () => {
 
   return (
     <nav style={navStyle}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-  <video
-    src="/logo.mp4"
-    autoPlay
-    loop
-    muted
-    playsInline
-    style={{
-      height: '60px',
-      marginRight: '16px',
-      borderRadius: '4px',
-    }}
-  />
-  <div style={logoStyle}>Autohaus</div>
-</div>
-      <div>
+      <div style={leftSideStyle}>
+        <video
+          src="/logo.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{ height: '60px', borderRadius: '4px' }}
+        />
+      </div>
+
+      <div style={centerStyle}>
+        <button onClick={() => navigate('/')} style={logoStyle}>AUTOHAUS</button>
+      </div>
+
+      <div style={rightSideStyle}>
         <Link to="/" style={linkStyle}>Home</Link>
         <button onClick={handleDashboardClick} style={linkButtonStyle}>Dashboard</button>
         <Link to="/cars" style={linkStyle}>Cars</Link>
 
         {isAuthenticated ? (
           <>
-          <button onClick={() => navigate('/vip-access')} style={{linkStyle}}>
-        VIP Cars
-      </button>
-            <button
-              onClick={logout}
-              style={linkButtonStyle}
-            >
-              Logout
-            </button>
-            <button onClick={toggleBasketModal} style={basketButtonStyle}>
-  Cart ({basket.length})
-</button>
+            <button onClick={() => navigate('/vip-access')} style={linkButtonStyle}>VIP Cars</button>
+            <button onClick={logout} style={linkButtonStyle}>Logout</button>
+            <button onClick={toggleBasketModal} style={basketButtonStyle}>Cart ({basket.length})</button>
           </>
         ) : (
           <Link to="/login" style={linkStyle}>Login</Link>
@@ -65,18 +56,46 @@ const navStyle = {
   color: '#fff',
   padding: '1rem 2rem',
   display: 'flex',
-  justifyContent: 'space-between',
   alignItems: 'center',
-  fontFamily: 'Helvetica Neue, sans-serif'
+  justifyContent: 'space-between',
+  fontFamily: 'Helvetica Neue, sans-serif',
+  position: 'fixed',
+  top: 0,
+  width: '100%',
+  zIndex: 999
+};
+
+const leftSideStyle = {
+  flex: 1,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-start'
+};
+
+const centerStyle = {
+  flex: 1,
+  display: 'flex',
+  justifyContent: 'center'
+};
+
+const rightSideStyle = {
+  flex: 1,
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center'
 };
 
 const logoStyle = {
-  fontSize: '1.5rem',
-  fontWeight: 'bold'
+  fontSize: '1.7rem',
+  fontWeight: 'bold',
+  background: 'none',
+  border: 'none',
+  color: '#fff',
+  cursor: 'pointer'
 };
 
 const linkStyle = {
-  backgroundColor:'#000',
+  backgroundColor: '#000',
   marginLeft: '1.5rem',
   textDecoration: 'none',
   color: '#fff',
