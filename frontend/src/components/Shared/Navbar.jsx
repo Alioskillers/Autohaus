@@ -15,11 +15,23 @@ const Navbar = () => {
     else navigate('/dashboard');
   };
 
-  const totalItems = basket.reduce((sum, item) => sum + item.quantity, 0);
-
   return (
     <nav style={navStyle}>
-      <div style={logoStyle}>Autohaus</div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+  <video
+    src="/logo.mp4"
+    autoPlay
+    loop
+    muted
+    playsInline
+    style={{
+      height: '60px',
+      marginRight: '16px',
+      borderRadius: '4px',
+    }}
+  />
+  <div style={logoStyle}>Autohaus</div>
+</div>
       <div>
         <Link to="/" style={linkStyle}>Home</Link>
         <button onClick={handleDashboardClick} style={linkButtonStyle}>Dashboard</button>
@@ -48,7 +60,6 @@ const Navbar = () => {
   );
 };
 
-// Styles
 const navStyle = {
   backgroundColor: '#000',
   color: '#fff',
