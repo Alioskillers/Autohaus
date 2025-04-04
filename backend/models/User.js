@@ -4,14 +4,14 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phone: { type: String, required: true },
-  role: { type: String, enum: ['User', 'Worker', 'Admin', 'Global-Admin'], default: 'User' },
+  role: { type: String, enum: ['User', 'Worker', 'Admin', 'Global-Admin', 'Workers-Admin'], default: 'User' },
   oldPurchases: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
   totalOrders: { type: Number, default: 0 },
   username: {
     type: String,
     unique: true,
     required: function () {
-      return this.role === 'Admin' || this.role === 'Global-Admin';
+      return this.role === 'Admin' || this.role === 'Global-Admin' || this.role === 'Worker' || this.role === 'Workers-Admin';
     }
   },
 }, { timestamps: true });

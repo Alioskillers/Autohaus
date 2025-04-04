@@ -1,5 +1,7 @@
 const Car = require('../models/Car');
 const AuditLog = require('../models/AuditLog');
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 exports.getAllCars = async (req, res) => {
   try {
@@ -92,3 +94,40 @@ await AuditLog.create({
       res.status(500).json({ message: err.message });
     }
   };
+
+  exports.updateCarPrice = async (req, res) => {
+    const { username, password, role, make, model, price } = req.body;
+      
+        if (!username || !password || !role) {
+          return res.status(400).json({ message: 'Username, password, and role are required' });
+        }
+      
+        try {
+          const user = await User.findOne({ username });
+          if (!user || user.role !== role || user.role !== 'Workers-Admin') {
+            return res.status(403).json({ message: 'Access denied: Workers-Admin only' });
+          }
+      
+          const isValid = await bcrypt.compare(password, user.password);
+          if (!isValid) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+          }
+      
+          if (!price || isNaN(price) || price < 1000 || price > 1000000) {
+            return res.status(400).json({ message: 'Price must be between 1,000 and 1,000,000' });
+          }
+      
+          const car = await Car.findOne({ make, model });
+          if (!car) {
+            return res.status(404).json({ message: 'Car not found' });
+          }
+      
+          car.price = price;
+          await car.save();
+      
+          return res.status(200).json({ message: 'Car price updated successfully', car });
+        } catch (err) {
+          console.error('Error updating price:', err);
+          return res.status(500).json({ message: 'Server error' });
+        }
+      };

@@ -20,7 +20,7 @@ const Login = () => {
       login(res.data.token, res.data.role);
       const role = res.data.role;
       if (role === 'Admin' || role==='Global-Admin') navigate('/admin');
-      else if (role === 'Worker') navigate('/worker');
+      else if (role === 'Worker' || role === 'Workers-Admin') navigate('/worker');
       else navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
@@ -47,7 +47,6 @@ const Login = () => {
         />
       </div>
 
-      {/* Login Form */}
       <div style={{
         flex: 1,
         display: 'flex',

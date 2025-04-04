@@ -40,6 +40,11 @@ import VerifyNewAdmin from './pages/VerifyNewAdmin';
 import CreateNewAdmin from './pages/CreateNewAdmin';
 import VerifyManagement from './pages/VerifyManagement';
 import AdminManagement from './pages/AdminManagement';
+import WorkerManagement from './pages/workerManagement';
+import VerifyWorkerManagement from './pages/VerifyWorkerManagement';
+import AddVipCarPage from './pages/AddVipCarPage';
+import UpdateCarPricePage from './pages/UpdateCarPricePage';
+import VerifyUpdatePricePage from './pages/VerifyUpdatePricePage';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -153,7 +158,7 @@ const AppContent = () => {
           path="/add-car"
           element={
             <Layout>
-              <ProtectedRoute allowedRoles={['Worker']}>
+              <ProtectedRoute allowedRoles={['Worker', 'Workers-Admin']}>
                 <AddCarPage />
               </ProtectedRoute>
             </Layout>
@@ -223,7 +228,7 @@ const AppContent = () => {
           path="/worker"
           element={
             <Layout>
-              <ProtectedRoute allowedRoles={['Worker']}>
+              <ProtectedRoute allowedRoles={['Worker', 'Workers-Admin']}>
                 <WorkerDashboard />
               </ProtectedRoute>
             </Layout>
@@ -251,7 +256,52 @@ const AppContent = () => {
   </ProtectedRoute>
 </Layout>
 } />
-      </Routes>
+      <Route path="/worker/verify-management" element={
+          <Layout>
+            <ProtectedRoute allowedRoles={['Worker', 'Workers-Admin']}>
+              <VerifyWorkerManagement />
+            </ProtectedRoute>
+          </Layout>
+        } />
+        <Route path="/worker/manage" element={
+          <Layout>
+            <ProtectedRoute allowedRoles={['Worker', 'Workers-Admin']}>
+              <WorkerManagement />
+            </ProtectedRoute>
+          </Layout>
+        } />
+        <Route
+    path="/add-vip-car"
+    element={
+      <Layout>
+        <ProtectedRoute allowedRoles={['Worker', 'Workers-Admin']}>
+          <AddVipCarPage />
+        </ProtectedRoute>
+      </Layout>
+    }
+  />
+  <Route
+  path="/worker/verify-update-price"
+  element={
+    <Layout>
+      <ProtectedRoute allowedRoles={['Workers-Admin']}>
+        <VerifyUpdatePricePage />
+      </ProtectedRoute>
+    </Layout>
+  }
+/>
+
+  <Route
+    path="/worker/update-car-price"
+    element={
+      <Layout>
+        <ProtectedRoute allowedRoles={['Workers-Admin']}>
+          <UpdateCarPricePage />
+        </ProtectedRoute>
+      </Layout>
+    }
+  />
+</Routes>
     </>
   );
 };

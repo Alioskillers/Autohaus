@@ -51,6 +51,7 @@ app.use('/api/vip', require('./routes/vip'));
 app.use('/api/vip/cars', require('./routes/vip'));
 app.use('/api/global-admin', require('./routes/globalAdminRoutes'));
 app.use('/api', require('./routes/managementRoutes'));
+app.use('/api/worker', require('./routes/workerRoutes'));
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 

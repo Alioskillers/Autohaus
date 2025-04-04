@@ -5,7 +5,6 @@ import axios from '../api/axiosConfig';
 const WorkerDashboard = () => {
   const [cars, setCars] = useState([]);
   const [stockUpdates, setStockUpdates] = useState({});
-  const [discounts, setDiscounts] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,49 +32,9 @@ const WorkerDashboard = () => {
     }
   };
 
-  const handleDiscountChange = (id, value) => {
-    setDiscounts({ ...discounts, [id]: value });
-  };
-
-  const applyDiscount = async (id) => {
-    try {
-      const car = cars.find((c) => c._id === id);
-      const discount = parseFloat(discounts[id]);
-      if (isNaN(discount) || discount <= 0 || discount >= 100) return;
-      const newPrice = car.price - (car.price * (discount / 100));
-      await axios.put(`/cars/${id}`, { price: newPrice.toFixed(2) });
-      fetchCars();
-      setDiscounts((prev) => ({ ...prev, [id]: '' }));
-    } catch (err) {
-      console.error('Discount failed:', err);
-    }
-  };
-
-  const handleAddCarClick = () => {
-    navigate('/add-car'); // Navigate to the add car page
-  };
-
   return (
     <div style={container}>
       <h1 style={heading}>Worker Dashboard</h1>
-
-      {/* Add Car Button */}
-      <button
-        onClick={handleAddCarClick}
-        style={{
-          padding: '0.75rem 1.25rem',
-          backgroundColor: '#28a745',
-          color: '#fff',
-          fontSize: '1rem',
-          fontWeight: 'bold',
-          border: 'none',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          marginBottom: '1.5rem'
-        }}
-      >
-        Add a New Car
-      </button>
 
       <section>
         <h2 style={subheading}>Car Stock Overview</h2>
@@ -93,7 +52,6 @@ const WorkerDashboard = () => {
                   <th>Price</th>
                   <th>Stock</th>
                   <th>Update Stock</th>
-                  <th>Apply Discount</th>
                 </tr>
               </thead>
               <tbody>
@@ -116,18 +74,6 @@ const WorkerDashboard = () => {
                       />
                       <button onClick={() => updateStock(car._id)} style={button}>Update</button>
                     </td>
-                    <td>
-                      <input
-                        type="number"
-                        min="1"
-                        max="99"
-                        placeholder="%"
-                        value={discounts[car._id] || ''}
-                        onChange={(e) => handleDiscountChange(car._id, e.target.value)}
-                        style={input}
-                      />
-                      <button onClick={() => applyDiscount(car._id)} style={button}>Apply</button>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -135,11 +81,17 @@ const WorkerDashboard = () => {
           </div>
         )}
       </section>
+
+      <div style={styles.grid}>
+        <div style={styles.card}>
+          <button style={styles.button} onClick={() => navigate('/worker/verify-management')}>
+          Management
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
-
-// --- STYLES ---
 
 const container = {
   padding: '2rem',
@@ -190,6 +142,32 @@ const button = {
   border: 'none',
   borderRadius: '4px',
   cursor: 'pointer'
+};
+
+const styles = {
+  grid: {
+    display: 'flex',
+    gap: '2rem',
+    marginTop: '3rem'
+  },
+  card: {
+    backgroundColor: '#fff',
+    padding: '2rem',
+    borderRadius: '10px',
+    boxShadow: '0 6px 12px rgba(0,0,0,0.1)',
+    flex: '1',
+    textAlign: 'center'
+  },
+  button: {
+    marginTop: '1rem',
+    padding: '0.75rem 1.5rem',
+    fontSize: '1rem',
+    backgroundColor: '#000',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer'
+  }
 };
 
 export default WorkerDashboard;
