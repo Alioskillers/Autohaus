@@ -3,9 +3,10 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { token, role } = useAuth();
+  const { role, isAuthenticated } = useAuth();
 
-  if (!token) return <Navigate to="/login" />;
+  if (!isAuthenticated) return <Navigate to="/login" />;
+
   if (allowedRoles && !allowedRoles.includes(role)) return <Navigate to="/" />;
 
   return children;

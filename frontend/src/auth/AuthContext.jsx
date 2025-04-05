@@ -1,59 +1,42 @@
+// src/auth/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import axios from '../api/axiosConfig'; // adjust path as needed
+import axios from '../api/axiosConfig';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(() => localStorage.getItem('token'));
-  const [role, setRole] = useState(() => localStorage.getItem('role'));
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (newToken, newRole) => {
-    setToken(newToken);
-    setRole(newRole);
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('role', newRole);
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get('/auth/me', { withCredentials: true });
+      setRole(res.data.role);
+    } catch (err) {
+      console.warn('Profile fetch failed:', err);
+      setRole(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const logout = () => {
-    setToken(null);
+  const login = async (roleFromLogin) => {
+    setRole(roleFromLogin);
+  };
+
+  const logout = async () => {
+    await axios.post('/auth/logout', {}, { withCredentials: true });
     setRole(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
   };
 
-  const isAuthenticated = !!token;
+  const isAuthenticated = !!role;
 
   useEffect(() => {
-    const refreshToken = async () => {
-      try {
-        const storedToken = localStorage.getItem('token');
-        if (storedToken) {
-          // Attempt to refresh the token and fetch user role
-          const res = await axios.post('/auth/refresh', {}, {
-            headers: {
-              Authorization: `Bearer ${storedToken}`
-            }
-          });
-
-          const { newToken, role: refreshedRole } = res.data;
-
-          // Update context and localStorage
-          setToken(newToken);
-          setRole(refreshedRole);
-          localStorage.setItem('token', newToken);
-          localStorage.setItem('role', refreshedRole);
-        }
-      } catch (err) {
-        console.warn('Token refresh failed:', err);
-        logout(); // fallback to logout if refresh fails
-      }
-    };
-
-    refreshToken();
+    fetchProfile();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, role, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ role, isAuthenticated, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

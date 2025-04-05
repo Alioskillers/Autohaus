@@ -5,12 +5,14 @@ const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 
 dotenv.config();
 connectDB();
 
 const app = express();
+app.use(cookieParser());
 
 app.use(express.json());
 app.use(

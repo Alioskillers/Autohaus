@@ -1,19 +1,14 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-/**
- * Middleware to protect routes and optionally restrict access to specific roles.
- * Usage: protect(['Admin']), protect(['Worker', 'Admin']), protect()
- */
 const protect = (allowedRoles = []) => async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const token = req.cookies?.token;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!token) {
     return res.status(401).json({ message: 'Missing or invalid token' });
   }
 
   try {
-    const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(decoded.id).select('-password');
@@ -32,5 +27,5 @@ const protect = (allowedRoles = []) => async (req, res, next) => {
   }
 };
 
-// ✅ Use named export to match routes
+
 module.exports = protect;

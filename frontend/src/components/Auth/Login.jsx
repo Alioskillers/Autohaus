@@ -16,12 +16,21 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/auth/login', formData);
-      login(res.data.token, res.data.role);
+      await axios.post('/auth/login', formData, {
+        withCredentials: true,
+      });
+  
+      const res = await axios.get('/auth/me', {
+        withCredentials: true,
+      });
+  
       const role = res.data.role;
-      if (role === 'Admin' || role==='Global-Admin') navigate('/admin');
+      login(role);
+  
+      if (role === 'Admin' || role === 'Global-Admin') navigate('/admin');
       else if (role === 'Worker' || role === 'Workers-Admin') navigate('/worker');
       else navigate('/dashboard');
+  
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }

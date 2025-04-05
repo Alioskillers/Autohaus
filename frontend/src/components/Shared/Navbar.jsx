@@ -4,9 +4,8 @@ import { useAuth } from '../../auth/AuthContext';
 import { useBasket } from '../../context/BasketContext';
 
 const Navbar = () => {
-  const { token, role, logout } = useAuth();
+  const { role, logout, isAuthenticated } = useAuth();
   const { basket, toggleBasketModal } = useBasket();
-  const isAuthenticated = !!token;
   const navigate = useNavigate();
 
   const handleDashboardClick = () => {

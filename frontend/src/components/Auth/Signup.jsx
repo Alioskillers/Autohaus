@@ -31,9 +31,14 @@ const Signup = () => {
       return;
     }
     try {
-      const res = await axios.post('/auth/register', formData);
-      login(res.data.token, res.data.role);
+      await axios.post('/auth/register', formData, {
+        withCredentials: true
+      });
+      const res = await axios.get('/auth/me', { withCredentials: true });
+      const role = res.data.role;
+      login(role);
       navigate('/dashboard');
+  
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed');
     }
