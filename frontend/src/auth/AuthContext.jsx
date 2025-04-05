@@ -1,4 +1,3 @@
-// src/auth/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from '../api/axiosConfig';
 
@@ -20,6 +19,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
   const login = async (roleFromLogin) => {
     setRole(roleFromLogin);
   };
@@ -31,13 +34,9 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthenticated = !!role;
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
   return (
     <AuthContext.Provider value={{ role, isAuthenticated, login, logout, loading }}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
