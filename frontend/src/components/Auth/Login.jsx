@@ -37,6 +37,9 @@ const Login = () => {
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (

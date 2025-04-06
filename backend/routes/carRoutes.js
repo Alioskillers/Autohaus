@@ -10,6 +10,6 @@ router.get('/', getAllCars);
 
 
 router.get('/:id', getCarById);
-router.put('/:id', protect(['Admin', 'Worker','Global-Admin']), updateCarStockOrPrice);
+router.put('/:id', protect(['Admin', 'Worker', 'Workers-Admin','Global-Admin']), updateCarStockOrPrice);
   
 module.exports = router;

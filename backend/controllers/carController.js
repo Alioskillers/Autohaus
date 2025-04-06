@@ -49,85 +49,72 @@ exports.addCar = async (req, res) => {
 };
 
 exports.updateCarStockOrPrice = async (req, res) => {
-    try {
-      const { stock, price } = req.body;
-  
-      const updateFields = {};
-      if (stock !== undefined) {
-        if (isNaN(stock) || stock < 0) {
-          return res.status(400).json({ message: 'Stock must be a non-negative number' });
-        }
-        updateFields.stock = stock;
-      }
-  
-      if (price !== undefined) {
-        if (isNaN(price) || price < 1000 || price > 1000000) {
-          return res.status(400).json({ message: 'Price must be between 1,000 and 1,000,000' });
-        }
-        updateFields.price = price;
-      }
-  
-      const updated = await Car.findByIdAndUpdate(
-        req.params.id,
-        { $set: updateFields },
-        { new: true }
-      );
-  
-      if (!updated) {
-        return res.status(404).json({ message: 'Car not found' });
-      }
-  
-await AuditLog.create({
-    userEmail: who,
-    carId: updated._id,
-    updates: updateFields
-  });
-  
-  exports.fullCar = req.query.full === 'true';
-      res.json({
-        message: 'Car updated successfully',
-        carId: updated._id,
-        updatedFields: updateFields
-        (fullCar && { car: updated })
-      });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  };
+  try {
+    const { stock, isVip } = req.body;
 
-  exports.updateCarPrice = async (req, res) => {
-    const { username, password, role, make, model, price } = req.body;
-      
-        if (!username || !password || !role) {
-          return res.status(400).json({ message: 'Username, password, and role are required' });
-        }
-      
-        try {
-          const user = await User.findOne({ username });
-          if (!user || user.role !== role || user.role !== 'Workers-Admin') {
-            return res.status(403).json({ message: 'Access denied: Workers-Admin only' });
-          }
-      
-          const isValid = await bcrypt.compare(password, user.password);
-          if (!isValid) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-          }
-      
-          if (!price || isNaN(price) || price < 1000 || price > 1000000) {
-            return res.status(400).json({ message: 'Price must be between 1,000 and 1,000,000' });
-          }
-      
-          const car = await Car.findOne({ make, model });
-          if (!car) {
-            return res.status(404).json({ message: 'Car not found' });
-          }
-      
-          car.price = price;
-          await car.save();
-      
-          return res.status(200).json({ message: 'Car price updated successfully', car });
-        } catch (err) {
-          console.error('Error updating price:', err);
-          return res.status(500).json({ message: 'Server error' });
-        }
-      };
+    if (stock === undefined || isNaN(stock) || stock < 0) {
+      return res.status(400).json({ message: 'Stock must be a non-negative number' });
+    }
+
+    const Model = isVip ? require('../models/VipCar') : require('../models/Car');
+    const car = await Model.findById(req.params.id);
+
+    if (!car) {
+      return res.status(404).json({ message: 'Car not found' });
+    }
+
+    const oldStock = car.stock || 0;
+    const newStock = oldStock + Number(stock);
+
+    car.stock = newStock;
+    const updated = await car.save();
+
+    await AuditLog.create({
+      userEmail: req.user?.email || 'Unknown',
+      carId: updated._id,
+      updates: { addedStock: stock, newStock, isVip: !!isVip }
+    });
+
+    res.json({ message: 'Stock updated successfully', car: updated });
+  } catch (err) {
+    console.error('Error updating stock:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+exports.updateCarPrice = async (req, res) => {
+  const { username, password, role, make, model, price } = req.body;
+
+  if (!username || !password || !role) {
+    return res.status(400).json({ message: 'Username, password, and role are required' });
+  }
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user || user.role !== role || user.role !== 'Workers-Admin') {
+      return res.status(403).json({ message: 'Access denied: Workers-Admin only' });
+    }
+
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    if (!price || isNaN(price) || price < 1000 || price > 1000000) {
+      return res.status(400).json({ message: 'Price must be between 1,000 and 1,000,000' });
+    }
+
+    const car = await Car.findOne({ make, model });
+    if (!car) {
+      return res.status(404).json({ message: 'Car not found' });
+    }
+
+    car.price = price;
+    await car.save();
+
+    return res.status(200).json({ message: 'Car price updated successfully', car });
+  } catch (err) {
+    console.error('Error updating price:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};

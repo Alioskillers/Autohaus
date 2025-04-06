@@ -1,4 +1,5 @@
 const VipCar = require('../models/VipCar');
+const AuditLog = require('../models/AuditLog');
 
 exports.getVipCars = async (req, res) => {
   try {
@@ -43,5 +44,37 @@ exports.addVipCar = async (req, res) => {
   } catch (err) {
     console.error('Error adding VIP car:', err);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.updateVipCarStock = async (req, res) => {
+  try {
+    const { stock } = req.body;
+
+    if (stock === undefined || isNaN(stock) || stock < 0) {
+      return res.status(400).json({ message: 'Stock must be a non-negative number' });
+    }
+
+    const vipCar = await VipCar.findById(req.params.id);
+    if (!vipCar) {
+      return res.status(404).json({ message: 'VIP Car not found' });
+    }
+
+    const oldStock = vipCar.stock || 0;
+    const newStock = oldStock + Number(stock);
+    vipCar.stock = newStock;
+
+    const updated = await vipCar.save();
+
+    await AuditLog.create({
+      userEmail: req.user?.email || 'Unknown',
+      carId: updated._id,
+      updates: { addedStock: stock, newStock }
+    });
+
+    res.json({ message: 'VIP Car stock updated successfully', car: updated });
+  } catch (err) {
+    console.error('Error updating VIP car stock:', err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };

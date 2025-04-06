@@ -5,9 +5,10 @@ import Spinner from '../components/Spinner';
 
 const WorkerDashboard = () => {
   const [cars, setCars] = useState([]);
+  const [vipCars, setVipCars] = useState([]);
   const [stockUpdates, setStockUpdates] = useState({});
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCars();
@@ -16,8 +17,12 @@ const WorkerDashboard = () => {
   const fetchCars = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('/cars');
-      setCars(res.data);
+      const [regularRes, vipRes] = await Promise.all([
+        axios.get('/cars'),
+        axios.get('/vip/cars')
+      ]);
+      setCars(regularRes.data);
+      setVipCars(Array.isArray(vipRes.data) ? vipRes.data : vipRes.data.vipCars);
     } catch (err) {
       console.error('Failed to fetch cars:', err);
     } finally {
@@ -26,80 +31,100 @@ const WorkerDashboard = () => {
   };
 
   const handleStockChange = (id, value) => {
-    setStockUpdates({ ...stockUpdates, [id]: value });
+    setStockUpdates(prev => ({ ...prev, [id]: value }));
   };
 
-  const updateStock = async (id) => {
+  const updateStock = async (id, isVip = false) => {
     try {
       const quantity = parseInt(stockUpdates[id]);
       if (isNaN(quantity) || quantity < 0) return;
       setLoading(true);
-      await axios.put(`/cars/${id}`, { stock: quantity });
-      fetchCars();
-      setStockUpdates((prev) => ({ ...prev, [id]: '' }));
+
+      const endpoint = isVip
+        ? `/vip/cars/${id}/stock`
+        : `/cars/${id}`;
+
+      await axios.put(endpoint, { stock: quantity });
+
+      await fetchCars();
+      setStockUpdates(prev => ({ ...prev, [id]: '' }));
     } catch (err) {
       console.error('Stock update failed:', err);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
+
+  const renderTable = (data, title, isVip = false) => (
+    <section style={{ marginTop: '2rem' }}>
+      <h2 style={subheading}>{title}</h2>
+      {data.length === 0 ? (
+        <p>No cars available.</p>
+      ) : (
+        <div style={scrollWrapper}>
+          <table style={table}>
+            <thead>
+              <tr>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Color</th>
+                <th>Top Speed</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Update Stock</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((car) => (
+                <tr key={car._id}>
+                  <td>{car.make}</td>
+                  <td>{car.model}</td>
+                  <td>{car.color}</td>
+                  <td>{car.topSpeed} km/h</td>
+                  <td>${car.price.toLocaleString()}</td>
+                  <td style={{ color: car.stock <= 3 ? 'red' : '#000', fontWeight: 'bold' }}>
+                    {car.stock || 0}
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="New stock"
+                      value={stockUpdates[car._id] || ''}
+                      onChange={(e) => handleStockChange(car._id, e.target.value)}
+                      style={input}
+                    />
+                    <button
+                      onClick={() => updateStock(car._id, isVip)}
+                      style={button}
+                    >
+                      Update
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  );
 
   return (
     <div style={container}>
       {loading && <Spinner />}
       <h1 style={heading}>Worker Dashboard</h1>
 
-      <section>
-        <h2 style={subheading}>Car Stock Overview</h2>
-        {cars.length === 0 ? (
-          <p>No cars available.</p>
-        ) : (
-          <div style={scrollWrapper}>
-            <table style={table}>
-              <thead>
-                <tr>
-                  <th>Make</th>
-                  <th>Model</th>
-                  <th>Color</th>
-                  <th>Top Speed</th>
-                  <th>Price</th>
-                  <th>Stock</th>
-                  <th>Update Stock</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cars.map((car) => (
-                  <tr key={car._id}>
-                    <td>{car.make}</td>
-                    <td>{car.model}</td>
-                    <td>{car.color}</td>
-                    <td>{car.topSpeed} km/h</td>
-                    <td>${car.price.toLocaleString()}</td>
-                    <td>{car.stock || 0}</td>
-                    <td>
-                      <input
-                        type="number"
-                        min="0"
-                        placeholder="New stock"
-                        value={stockUpdates[car._id] || ''}
-                        onChange={(e) => handleStockChange(car._id, e.target.value)}
-                        style={input}
-                      />
-                      <button onClick={() => updateStock(car._id)} style={button}>Update</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+      {renderTable(cars, 'Car Stock Overview')}
+      {renderTable(vipCars, 'VIP Car Stock Overview', true)}
 
       <div style={styles.grid}>
         <div style={styles.card}>
-          <button style={styles.button} onClick={() => navigate('/worker/verify-management')}>
-          Management
+          <button
+            style={styles.button}
+            onClick={() => navigate('/worker/verify-management')}
+          >
+            Management
           </button>
         </div>
       </div>
@@ -129,7 +154,8 @@ const subheading = {
 const scrollWrapper = {
   overflowX: 'auto',
   borderRadius: '10px',
-  boxShadow: '0 6px 18px rgba(0,0,0,0.05)'
+  boxShadow: '0 6px 18px rgba(0,0,0,0.05)',
+  marginBottom: '2rem'
 };
 
 const table = {
