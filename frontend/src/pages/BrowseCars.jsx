@@ -1,18 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axiosConfig';
 import { Link } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const BrowseCars = () => {
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('/cars').then(res => setCars(res.data));
+    const fetchCars = async () => {
+      try {
+        const res = await axios.get('/cars');
+        setCars(res.data);
+      } catch (err) {
+        console.error('Failed to fetch cars:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCars();
   }, []);
 
   const filteredCars = cars.filter((car) =>
     car.model.toLowerCase().includes(search.toLowerCase())
   );
+
 
   return (
     <div className="browse-cars-page" style={{ padding: '3rem', fontFamily: 'Helvetica, sans-serif', backgroundColor: '#f5f5f5' }}>
@@ -34,6 +48,9 @@ const BrowseCars = () => {
           outline: 'none'
         }}
       />
+      {loading ? (
+        <Spinner />
+      ) : (
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
         {filteredCars.map(car => (
@@ -82,6 +99,7 @@ const BrowseCars = () => {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 };

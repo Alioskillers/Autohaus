@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from '../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const AddCarPage = () => {
+  const [loading, setLoading] = useState(false)
   const [car, setCar] = useState({
     make: '',
     model: '',
@@ -22,6 +24,7 @@ const AddCarPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     
     const carData = {
       ...car,
@@ -36,11 +39,14 @@ const AddCarPage = () => {
     } catch (err) {
       console.error('Error adding car:', err);
       alert('Error adding car. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div style={styles.container}>
+      {loading && <Spinner />}
       <h1 style={styles.title}>Add New Car</h1>
       <form onSubmit={handleSubmit} style={styles.form}>
         <input

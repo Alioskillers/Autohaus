@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axiosConfig';
 import { Link } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const VIPPage = () => {
   const [vipCars, setVipCars] = useState([]);
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     axios.get('/api/vip/cars')
       .then(res => {
-        // Assuming res.data is an object { vipCars: [...] }
         setVipCars(res.data.vipCars || []);
       })
-      .catch(err => console.error('Error fetching VIP cars:', err));
+      .catch(err => console.error('Error fetching VIP cars:', err))
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     axios.get('/vip/cars')
       .then(res => {
         const data = Array.isArray(res.data) ? res.data : res.data.vipCars;
         setVipCars(data);
       })
-      .catch(err => console.error('Error fetching VIP cars:', err));
+      .catch(err => console.error('Error fetching VIP cars:', err))
+      .finally(() => setLoading(false));
   }, []);
 
   // Filter cars by model name
@@ -31,6 +36,7 @@ const VIPPage = () => {
 
   return (
     <div className="browse-cars-page" style={{ padding: '3rem', fontFamily: 'Helvetica, sans-serif', backgroundColor: '#f5f5f5' }}>
+      {loading && <Spinner />}
       <h1 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', color: '#111' }}>VIP Cars</h1>
 
       <input

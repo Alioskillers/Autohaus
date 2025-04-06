@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Spinner from '../components/Spinner';
 
 const VIPAccessPage = () => {
   const [vipUsername, setVipUsername] = useState('');
@@ -28,11 +29,14 @@ const VIPAccessPage = () => {
       console.error('Error verifying VIP access:', err);
       setError(err.response?.data?.message || 'Error verifying VIP access');
     }
-    setLoading(false);
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={styles.wrapper}>
+      {loading && <Spinner />}
       <div style={styles.imageContainer}>
         <img
           src="/vip.jpg.webp"

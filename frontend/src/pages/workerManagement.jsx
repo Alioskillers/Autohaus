@@ -1,25 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import Spinner from '../components/Spinner';
 
 const WorkerManagement = () => {
+  
   const navigate = useNavigate();
   const { role } = useAuth();
+  const [loading, setLoading] = useState(false);
+
+  const handleNavigate = (path) => {
+    setLoading(true);
+    setTimeout(() => navigate(path), 500);
+  };
 
   return (
     <div style={styles.container}>
+      {loading && <Spinner />}
       <h1 style={styles.heading}>Worker Management Panel</h1>
       <p style={styles.subtext}>Select an action below:</p>
 
       <div style={styles.actions}>
-        <button style={styles.button} onClick={() => navigate('/add-car')}>
+        <button style={styles.button} onClick={() => handleNavigate('/add-car')}>
         Add Car
         </button>
-        <button style={styles.button} onClick={() => navigate('/add-vip-car')}>
+        <button style={styles.button} onClick={() => handleNavigate('/add-vip-car')}>
         Add VIP Car
         </button>
         {role === 'Workers-Admin' && (
-          <button style={styles.button} onClick={() => navigate('/worker/verify-update-price')}>
+          <button style={styles.button} onClick={() => handleNavigate('/worker/verify-update-price')}>
         Update Car Price
           </button>
         )}

@@ -2,15 +2,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const VerifyManagement = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleVerify = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
     try {
       const res = await axios.post('/api/verify-management', { username, password });
       if (res.data.message === 'Verification successful') {
@@ -18,6 +22,9 @@ const VerifyManagement = () => {
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Verification failed');
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -29,6 +36,7 @@ const VerifyManagement = () => {
           <p style={styles.sub}>Please verify your admin credentials</p>
 
           {error && <p style={styles.error}>{error}</p>}
+          {loading && <Spinner />}
 
           <form onSubmit={handleVerify}>
             <input

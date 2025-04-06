@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from '../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const VerifyWorkerManagement = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,6 +15,7 @@ const VerifyWorkerManagement = () => {
 
   const handleVerify = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError('');
 
     try {
@@ -26,10 +29,14 @@ const VerifyWorkerManagement = () => {
       console.error('Verification error:', err);
       setError(err.response?.data?.message || 'Verification failed');
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={styles.container}>
+      {loading && <Spinner />}
       <div style={styles.card}>
         <h2 style={styles.title}>Worker Management Verification</h2>
         <p style={styles.subtext}>Enter your credentials to proceed</p>

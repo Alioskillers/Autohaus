@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from '../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const VerifyUpdatePricePage = () => {
   const [form, setForm] = useState({ username: '', password: ''});
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,6 +15,7 @@ const VerifyUpdatePricePage = () => {
 
   const handleVerify = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await axios.post('/worker/verify', form);
       if (res.data.message === 'Verification successful') {
@@ -29,10 +32,14 @@ const VerifyUpdatePricePage = () => {
     } catch (err) {
       setError(err.response?.data?.message || 'Error verifying credentials');
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={styles.container}>
+      {loading && <Spinner />}
       <div style={styles.card}>
         <h2>Verify Worker Admin</h2>
         {error && <p style={styles.error}>{error}</p>}

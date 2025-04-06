@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useBasket } from '../context/BasketContext';
 import axios from '../api/axiosConfig';
+import Spinner from '../components/Spinner';
 
 const cardLogos = {
   Visa: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg',
@@ -20,6 +21,7 @@ const CardPaymentPage = () => {
   const [cvv, setCvv] = useState('');
   const [maskedCard, setMaskedCard] = useState(false);
   const [maskedCvv, setMaskedCvv] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const detectCardType = (number) => {
     if (!number) return ''; // avoid crashing on empty/undefined
@@ -64,10 +66,14 @@ const CardPaymentPage = () => {
     } catch (err) {
       console.error('Card payment failed:', err);
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={styles.container}>
+      {loading && <Spinner />}
       <h2 style={styles.title}>Card Information</h2>
 
       <div style={styles.formGroup}>

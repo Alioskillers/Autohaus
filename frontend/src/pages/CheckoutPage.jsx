@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBasket } from '../context/BasketContext';
-import axios from '../api/axiosConfig';
+import Spinner from '../components/Spinner';
 
 const CheckoutPage = () => {
   const { basket, clearBasket } = useBasket();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const [buyer, setBuyer] = useState({
@@ -33,8 +34,10 @@ const CheckoutPage = () => {
   
     if (!carId) {
       alert("Error: No car selected or car ID is missing.");
+      setLoading(false);
       return;
     }
+    setLoading(true);
   
     if (paymentType === 'installment') {
         navigate('/installment', {
@@ -55,6 +58,7 @@ const CheckoutPage = () => {
 
   return (
     <div style={styles.container}>
+      {loading && <Spinner />}
       <h2 style={styles.heading}>Checkout</h2>
 
       <form onSubmit={handleSubmit} style={styles.form}>
@@ -79,7 +83,9 @@ const CheckoutPage = () => {
           <option value="installment">Installment Plan</option>
         </select>
 
-        <button type="submit" style={styles.button}>Continue</button>
+        <button type="submit" disabled={loading} style={{ ...styles.button, opacity: loading ? 0.6 : 1 }}>
+  {loading ? 'Processing...' : 'Continue'}
+</button>
       </form>
     </div>
   );

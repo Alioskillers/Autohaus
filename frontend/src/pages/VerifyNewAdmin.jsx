@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const VerifyNewAdmin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleVerify = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError('');
     try {
       const res = await axios.post('/api/global-admin/verify', { username, password, role: 'Global-Admin' });
@@ -19,10 +22,14 @@ const VerifyNewAdmin = () => {
     } catch (err) {
       setError(err.response?.data?.message || 'Verification failed');
     }
+    finally {
+      setLoading(false);
+    }
   };
 
     return (
   <div style={styles.wrapper}>
+    {loading && <Spinner />}
       <div style={styles.container}>
         <div style={styles.card}>
           <h1 style={styles.title}>Please Verify Your Admin Identity</h1>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from '../api/axiosConfig';
 import { useBasket } from '../context/BasketContext';
+import Spinner from '../components/Spinner';
+
 
 const VIPCarDetails = () => {
   const { id } = useParams();
@@ -10,12 +12,26 @@ const VIPCarDetails = () => {
   const [type, setType] = useState('purchase');
   const [period, setPeriod] = useState(1);
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios.get(`/vip/cars/${id}`).then(res => setCar(res.data));
+    const fetchCar = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`/vip/cars/${id}`);
+        setCar(res.data);
+      } catch (err) {
+        console.error('Error fetching car details:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchCar();
   }, [id]);
 
-  if (!car) return <p>Loading car details...</p>;
+  if (loading) return <Spinner />;
+if (!car) return <p>Car not found.</p>;
 
   return (
     <div style={container}>

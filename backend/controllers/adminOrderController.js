@@ -17,24 +17,26 @@ exports.getAllOrders = async (req, res) => {
       .limit(limit)
       .populate('user car');
 
-    res.json({
-      currentPage: page,
-      totalPages: Math.ceil(totalOrders / limit),
-      totalOrders,
-      orders: orders.map(order => ({
-        id: order._id,
-        car: `${order.car.make} ${order.car.model}`,
-        price: formatCurrency(order.car.price),
-        userEmail: order.user.email,
-        phone: order.user.phone,
-        receipt: order.receiptNumber,
-        type: order.type,
-        period: order.period,
-        createdAt: formatDate(order.createdAt),
-        deliveryDate: formatDate(order.deliveryDate),
-        installmentPlan: order.installmentPlan || null
-      }))
-    });
+      res.json({
+        currentPage: page,
+        totalPages: Math.ceil(totalOrders / limit),
+        totalOrders,
+        orders: orders.map(order => ({
+          id: order._id,
+          car: order.car?.make && order.car?.model
+            ? `${order.car.make} ${order.car.model}`
+            : 'Car Removed',
+          price: order.car?.price ? formatCurrency(order.car.price) : 'N/A',
+          userEmail: order.user?.email || 'User Removed',
+          phone: order.user?.phone || 'N/A',
+          receipt: order.receiptNumber,
+          type: order.type,
+          period: order.period,
+          createdAt: formatDate(order.createdAt),
+          deliveryDate: formatDate(order.deliveryDate),
+          installmentPlan: order.installmentPlan || null
+        }))
+      });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

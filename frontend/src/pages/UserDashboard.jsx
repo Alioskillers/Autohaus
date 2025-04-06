@@ -1,28 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axiosConfig';
+import Spinner from '../components/Spinner';
 
 const UserDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [recommended, setRecommended] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios.get('/orders/my-orders')
-      .then(res => {
-        if (Array.isArray(res.data)) setOrders(res.data);
-        else console.warn('Unexpected orders response:', res.data);
-      })
-      .catch(err => console.error('Order fetch error:', err));
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [ordersRes, recommendedRes] = await Promise.all([
+          axios.get('/orders/my-orders'),
+          axios.get('/recommendations')
+        ]);
 
-    axios.get('/recommendations')
-      .then(res => {
-        if (Array.isArray(res.data)) setRecommended(res.data);
-        else console.warn('Unexpected recommendations response:', res.data);
-      })
-      .catch(err => console.error('Recommendation fetch error:', err));
+        if (Array.isArray(ordersRes.data)) setOrders(ordersRes.data);
+        else console.warn('Unexpected orders response:', ordersRes.data);
+
+        if (Array.isArray(recommendedRes.data)) setRecommended(recommendedRes.data);
+        else console.warn('Unexpected recommendations response:', recommendedRes.data);
+      } catch (err) {
+        console.error('Fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
     <div style={{ padding: '3rem', backgroundColor: '#f4f4f4', fontFamily: 'Helvetica Neue, sans-serif' }}>
+      {loading && <Spinner />}
+      {!loading && (
+        <>
       <h1 style={{ fontSize: '2rem', marginBottom: '2rem', color: '#111', textAlign: 'center' }}>Welcome</h1>
 
       <section style={{ marginBottom: '3rem' }}>
@@ -55,6 +68,8 @@ const UserDashboard = () => {
           ))
         )}
       </section>
+      </>
+      )}
     </div>
   );
 };

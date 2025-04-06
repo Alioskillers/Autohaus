@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const LandingPage = () => {
   const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -12,6 +14,9 @@ const LandingPage = () => {
         setCars(data);
       } catch (error) {
         console.error('Failed to fetch cars:', error);
+      }
+      finally {
+      setLoading(false);
       }
     };
 
@@ -63,6 +68,11 @@ const LandingPage = () => {
         >
           Featured Cars
         </h2>
+        {loading ? (
+          <div style={{ textAlign: 'center' }}>
+          <Spinner />
+        </div>
+      ) : (
         <div style={gridStyle}>
           {cars.map((car) => (
             <div
@@ -96,6 +106,7 @@ const LandingPage = () => {
             </div>
           ))}
         </div>
+      )}
       </div>
     </div>
   );

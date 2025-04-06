@@ -9,9 +9,13 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleDashboardClick = () => {
-    if (role === 'Admin') navigate('/admin');
-    else if (role === 'Worker') navigate('/worker');
-    else navigate('/dashboard');
+    if (role === 'Admin' || role === 'Global-Admin') {
+      navigate('/admin');
+    } else if (role === 'Worker' || role === 'Workers-Admin') {
+      navigate('/worker');
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   return (

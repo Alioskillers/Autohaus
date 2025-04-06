@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axiosConfig';
 import { useAuth } from '../../auth/AuthContext';
+import Spinner from '../../components/Spinner';
 
 const Signup = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -26,6 +28,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -52,6 +55,7 @@ const Signup = () => {
 
   return (
     <div style={styles.wrapper}>
+      {loading && <Spinner />}
       <div style={styles.imageContainer}>
         <img src="/signup.jpg" alt="Signup Visual" style={styles.image} />
       </div>

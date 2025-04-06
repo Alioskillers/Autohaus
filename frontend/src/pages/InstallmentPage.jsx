@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from '../api/axiosConfig';
+import Spinner from '../components/Spinner';
 
 const InstallmentPage = () => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { state } = useLocation();
 const buyer = state?.buyer;
 const totalAmount = state?.totalAmount;
-const carId = state?.carId; // ✅ define it here
+const carId = state?.carId;
 
   const [period, setPeriod] = useState(1);
   const [frequency, setFrequency] = useState('monthly');
@@ -15,6 +17,7 @@ const carId = state?.carId; // ✅ define it here
   const [error, setError] = useState('');
 
   const calculate = async () => {
+    setLoading(true);
     try {
       const res = await axios.post('/installments/calculate', {
         totalAmount,
@@ -26,9 +29,13 @@ const carId = state?.carId; // ✅ define it here
     } catch (err) {
       setError(err.response?.data?.message || 'Calculation failed');
     }
+    finally {
+    setLoading(false);
+    }
   };
 
   const confirmPayment = async () => {
+    setLoading(true);
     try {
       const res = await axios.post('/payments/installment', {
         buyer,
@@ -41,10 +48,14 @@ const carId = state?.carId; // ✅ define it here
     } catch (err) {
       setError(err.response?.data?.message || 'Installment creation failed');
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={styles.container}>
+      {loading && <Spinner />}
       <h2 style={styles.heading}>Choose Your Installment Plan</h2>
       <p style={{ marginBottom: '1rem' }}>Total Amount: ${totalAmount.toLocaleString()}</p>
 

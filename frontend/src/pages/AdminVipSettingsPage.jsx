@@ -1,7 +1,7 @@
-// /src/pages/AdminVipSettingsPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Spinner from '../components/Spinner';
 
 const AdminVipSettingsPage = () => {
   const [email, setEmail] = useState('');
@@ -37,6 +37,7 @@ const AdminVipSettingsPage = () => {
 
   return (
     <div style={styles.wrapper}>
+      {loading && <Spinner />}
       <div style={styles.container}>
         <div style={styles.card}>
           <h1 style={styles.autohausHeader}>AUTOHAUS</h1>

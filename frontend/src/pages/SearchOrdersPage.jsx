@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from '../api/axiosConfig';
+import Spinner from '../components/Spinner';
 
 const SearchOrdersPage = () => {
   const [query, setQuery] = useState({ email: '', phone: '', receipt: '', date: '' });
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setQuery({ ...query, [e.target.name]: e.target.value });
@@ -13,11 +15,15 @@ const SearchOrdersPage = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       const res = await axios.get('/admin/orders/search', { params: query });
       setResults(res.data || []);
     } catch (err) {
       setError('Error fetching orders. Please check input.');
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -34,6 +40,7 @@ const SearchOrdersPage = () => {
       </form>
 
       {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
+      {loading && <Spinner />}
 
       <div style={gridStyle}>
         {results.map(order => (

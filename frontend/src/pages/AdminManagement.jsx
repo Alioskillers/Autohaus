@@ -1,23 +1,32 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Spinner from '../components/Spinner';
 
 const AdminManagement = () => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    setLoading(true);
+    navigate(path);
+  };
 
   return (
     <div style={styles.wrapper}>
+      {loading && <Spinner />}
       <div style={styles.container}>
         <div style={styles.card}>
           <h1 style={styles.header}>Admin Management</h1>
           <p style={styles.sub}>Choose an administrative action:</p>
 
-          <button onClick={() => navigate('/admin/verify-new-admin')} style={styles.button}>
+          <button onClick={() => handleNavigation('/admin/verify-new-admin')} style={styles.button}>
             Add New Admin
           </button>
-          <button onClick={() => navigate('/admin/verify-password')} style={styles.button}>
+          <button onClick={() => handleNavigation('/admin/verify-password')} style={styles.button}>
             Add A VIP User
           </button>
-          <button onClick={() => navigate('/admin/orders')} style={styles.button}>
+          <button onClick={() => handleNavigation('/admin/orders')} style={styles.button}>
             Search Orders
           </button>
         </div>

@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const CreateNewAdmin = () => {
   const [form, setForm] = useState({ email: '', username: '', password: '', phone: '' });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post('/api/global-admin/create-admin', form);
       navigate('/admin');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create admin');
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={styles.wrapper}>
+      {loading && <Spinner />}
       <div style={styles.container}>
         <div style={styles.card}>
           <h1 style={styles.title}>Create New Admin</h1>

@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axiosConfig';
 import { useAuth } from '../../auth/AuthContext';
+import Spinner from '../../components/Spinner';
 
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,6 +17,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post('/auth/login', formData, {
         withCredentials: true,
@@ -37,12 +40,8 @@ const Login = () => {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      minHeight: '100vh',
-      fontFamily: 'Helvetica Neue, sans-serif',
-      overflow: 'hidden'
-    }}>
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Helvetica Neue, sans-serif', overflow: 'hidden' }}>
+      {loading && <Spinner />}
       <div style={{ flex: 1, height: '100vh', overflow: 'hidden' }}>
         <img
           src="/login.jpg"
@@ -148,21 +147,22 @@ const Login = () => {
           </form>
 
           <p style={{ textAlign: 'center', marginTop: '1rem' }}>
-  <button
-    onClick={() => navigate('/forgot-password')}
-    style={{
-      background: 'none',
-      border: 'none',
-      color: '#000',
-      fontSize: '0.95rem',
-      cursor: 'pointer',
-      textDecoration: 'underline',
-      fontWeight: '500'
-    }}
-  >
-    Forgot your password?
-  </button>
-</p>
+            <button
+              onClick={() => navigate('/forgot-password')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#000',
+                fontSize: '0.95rem',
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                fontWeight: '500'
+              }}
+            >
+              Forgot your password?
+            </button>
+          </p>
+
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -174,6 +174,7 @@ const Login = () => {
             <span style={{ margin: '0 1rem', fontSize: '0.85rem' }}>or</span>
             <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }} />
           </div>
+
           <button
             onClick={() => navigate('/signup')}
             style={{

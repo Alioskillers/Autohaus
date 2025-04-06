@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axios from '../api/axiosConfig';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const UpdateCarPricePage = () => {
   const [form, setForm] = useState({ make: '', model: '', price: '' });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState(false);
 
   const { username, password } = location.state || {};
 
@@ -16,6 +18,7 @@ const UpdateCarPricePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setMessage('');
 
     if (!username || !password) {
@@ -38,10 +41,14 @@ const UpdateCarPricePage = () => {
     } catch (err) {
       setMessage(err.response?.data?.message || 'Failed to update price');
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={styles.container}>
+      {loading && <Spinner />}
       <h1 style={styles.title}>Update Car Price</h1>
       <form onSubmit={handleSubmit} style={styles.form}>
         <input name="make" placeholder="Car Make" value={form.make} onChange={handleChange} style={styles.input} required />

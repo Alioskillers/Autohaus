@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axiosConfig';
+import Spinner from '../components/Spinner';
 
 const WorkerDashboard = () => {
   const [cars, setCars] = useState([]);
   const [stockUpdates, setStockUpdates] = useState({});
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCars();
   }, []);
 
   const fetchCars = async () => {
-    const res = await axios.get('/cars');
-    setCars(res.data);
+    setLoading(true);
+    try {
+      const res = await axios.get('/cars');
+      setCars(res.data);
+    } catch (err) {
+      console.error('Failed to fetch cars:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleStockChange = (id, value) => {
@@ -24,16 +33,21 @@ const WorkerDashboard = () => {
     try {
       const quantity = parseInt(stockUpdates[id]);
       if (isNaN(quantity) || quantity < 0) return;
+      setLoading(true);
       await axios.put(`/cars/${id}`, { stock: quantity });
       fetchCars();
       setStockUpdates((prev) => ({ ...prev, [id]: '' }));
     } catch (err) {
       console.error('Stock update failed:', err);
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={container}>
+      {loading && <Spinner />}
       <h1 style={heading}>Worker Dashboard</h1>
 
       <section>

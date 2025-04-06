@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const AdminVerifyPage = () => {
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -32,6 +34,7 @@ const AdminVerifyPage = () => {
 
     return (
       <div style={styles.wrapper}>
+        {loading && <Spinner />}
         <div style={styles.container}>
           <div style={styles.card}>
             <h1 style={styles.autohausHeader}>ADMIN VERIFICATION</h1>
