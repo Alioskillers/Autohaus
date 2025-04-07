@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Car = require('../models/Car');
 const VipCar = require('../models/VipCar');
+const { exec } = require('child_process');
 
 const generateReceipt = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -9,6 +10,17 @@ const generateReceipt = () => {
     receipt += chars[Math.floor(Math.random() * chars.length)];
   }
   return receipt;
+};
+
+const updateRecommendations = async () => {
+  exec('python3 ml/updater.py', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
+    if (err) {
+      console.error('❌ Error updating recommendations:', err);
+    } else {
+      console.log('🔄 Recommendation model updated.');
+      console.log(stdout);
+    }
+  });
 };
 
 const processCardPayment = async (req, res) => {
@@ -72,6 +84,7 @@ const processCardPayment = async (req, res) => {
     console.error('Card payment error:', err);
     res.status(500).json({ message: 'Server error' });
   }
+  await updateRecommendations(req.user._id);
 };
 
 const processInstallmentPayment = async (req, res) => {
@@ -120,6 +133,7 @@ const processInstallmentPayment = async (req, res) => {
     });
 
     await order.save();
+    await updateRecommendations(req.user._id);
 
     res.status(201).json({
       message: 'Installment payment successful',

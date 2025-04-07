@@ -6,3 +6,7 @@ frontend/build
 .DS_Store
 .vscode/
 .idea/
+*.pkl
+__pycache__/
+*.log
+venv/

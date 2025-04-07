@@ -1,27 +1,23 @@
+const axios = require('axios');
 const Order = require('../models/Order');
 const Car = require('../models/Car');
 const VipCar = require('../models/VipCar');
 
 exports.getRecommendations = async (req, res) => {
   try {
-    const userOrders = await Order.find({ user: req.user.id }).populate('car');
+    const userId = req.user?._id;
 
-    const preferredMakes = [...new Set(userOrders.map(order => order.car?.make).filter(Boolean))];
-
-    if (preferredMakes.length === 0) {
-      return res.json([]);
+    if (!userId) {
+      return res.status(400).json({ message: 'Missing user ID for recommendation' });
     }
 
-    const [regularCars, vipCars] = await Promise.all([
-      Car.find({ make: { $in: preferredMakes } }),
-      VipCar.find({ make: { $in: preferredMakes } })
-    ]);
+    const response = await axios.post('http://localhost:5001/recommend', {
+      userId: userId.toString()
+    });
 
-    const recommendedCars = [...regularCars, ...vipCars];
-
-    res.json(recommendedCars);
+    return res.json(response.data);
   } catch (err) {
-    console.error('Recommendation error:', err);
-    res.status(500).json({ message: err.message });
+    console.error('🔥 Recommendation Error:', err.message);
+    return res.status(500).json({ message: 'Failed to fetch recommendations' });
   }
 };
