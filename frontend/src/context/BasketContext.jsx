@@ -15,9 +15,10 @@ export const BasketProvider = ({ children }) => {
             item.car._id === car._id ? { ...item, quantity: item.quantity + quantity } : item
           )
         : [...prev, { car, quantity }];
-      
-      // ✅ Sync to server
+  
       syncBasketWithServer(updated);
+      setShowBasket(true);
+  
       return updated;
     });
   };
