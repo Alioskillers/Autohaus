@@ -1,7 +1,4 @@
 const axios = require('axios');
-const Order = require('../models/Order');
-const Car = require('../models/Car');
-const VipCar = require('../models/VipCar');
 
 exports.getRecommendations = async (req, res) => {
   try {

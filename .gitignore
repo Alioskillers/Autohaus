@@ -10,3 +10,4 @@ frontend/build
 __pycache__/
 *.log
 venv/
+authors.pem

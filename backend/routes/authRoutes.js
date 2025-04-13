@@ -1,5 +1,4 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const { register, login, getProfile, logout } = require('../controllers/authController');
 const protect = require('../middleware/authMiddleware');
 
