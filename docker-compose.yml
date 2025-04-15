@@ -19,9 +19,5 @@ services:
     depends_on:
       - redis
     restart: always
-    volumes:
-<<<<<<< Updated upstream
-      - ./backend/ml/model.pkl:/app/model.pkl
-=======
-      - /home/ubuntu/Autohaus/backend/ml/model.pkl:/app/model.pkl
->>>>>>> Stashed changes
+volumes:
+  - ./backend/ml/model.pkl:/app/model.pkl
