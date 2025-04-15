@@ -6,37 +6,30 @@ import Spinner from '../components/Spinner';
 const VIPPage = () => {
   const [vipCars, setVipCars] = useState([]);
   const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    axios.get('/api/vip/cars')
-      .then(res => {
-        setVipCars(res.data.vipCars || []);
-      })
-      .catch(err => console.error('Error fetching VIP cars:', err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    axios.get('/vip/cars')
-      .then(res => {
-        const data = Array.isArray(res.data) ? res.data : res.data.vipCars;
+    const fetchVipCars = async () => {
+      try {
+        const res = await axios.get('/vip/cars');
+        const data = Array.isArray(res.data) ? res.data : [];
         setVipCars(data);
-      })
-      .catch(err => console.error('Error fetching VIP cars:', err))
-      .finally(() => setLoading(false));
+      } catch (err) {
+        console.error('Error fetching VIP cars:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVipCars();
   }, []);
 
-  // Filter cars by model name
-  const filteredVipCars = vipCars.filter((vipCars) =>
-    vipCars.model.toLowerCase().includes(search.toLowerCase())
+  const filteredVipCars = (vipCars || []).filter((car) =>
+    car.model.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="browse-cars-page" style={{ padding: '3rem', fontFamily: 'Helvetica, sans-serif', backgroundColor: '#f5f5f5' }}>
-      {loading && <Spinner />}
       <h1 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', color: '#111' }}>VIP Cars</h1>
 
       <input
@@ -56,6 +49,11 @@ const VIPPage = () => {
         }}
       />
 
+{loading ? (
+      <div style={{ textAlign: 'center', marginTop: '4rem' }}>
+        <Spinner />
+      </div>
+    ) : (
       <div style={{ 
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
@@ -75,7 +73,7 @@ const VIPPage = () => {
             onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
           >
             <img
-              src={car.image}
+              src={car.imageUrl || `https://autohaus-images.s3.eu-north-1.amazonaws.com/${car._id}.jpg`}
               alt={`${car.make} ${car.model}`}
               style={{ width: '100%', height: '200px', objectFit: 'cover' }}
             />
@@ -111,6 +109,7 @@ const VIPPage = () => {
           </div>
         ))}
       </div>
+    )}
     </div>
   );
 };

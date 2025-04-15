@@ -7,7 +7,6 @@ const carSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   topSpeed: { type: Number, required: true },
   stock: { type: Number, default: 0 },
-  image: { type: String }, // path to local image
 }, { timestamps: true });
 
 module.exports = mongoose.model('Car', carSchema);

@@ -40,7 +40,11 @@ const VipCarDetails = () => {
     <div style={container}>
       <h2 style={heading}>{car.make} {car.model}</h2>
 
-      {car.image && <img src={car.image} alt={car.model} style={image} />}
+      <img
+  src={car.imageUrl || `https://autohaus-images.s3.eu-north-1.amazonaws.com/${car._id}.jpg`}
+  alt={`${car.make} ${car.model}`}
+  style={image}
+/>
 
       <div style={infoGrid}>
         <p><strong>Color:</strong> {car.color}</p>

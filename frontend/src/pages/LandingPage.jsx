@@ -90,13 +90,11 @@ const LandingPage = () => {
                 e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.1)';
               }}
             >
-              {car.image && (
-                <img
-                  src={car.image}
-                  alt={`${car.make} ${car.model}`}
-                  style={imageStyle}
-                />
-              )}
+              <img
+  src={`https://autohaus-images.s3.eu-north-1.amazonaws.com/${car._id}.jpg`}
+  alt={`${car.make} ${car.model}`}
+  style={imageStyle}
+/>
               <div style={{ padding: '1rem' }}>
                 <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#111' }}>
                   {car.make} {car.model}
