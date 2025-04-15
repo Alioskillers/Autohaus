@@ -20,4 +20,4 @@ services:
       - redis
     restart: always
     volumes:
-      - ./backend/ml/model.pkl:/app/model.pkl
+- ./backend/ml/model.pkl:/app/model.pkl
