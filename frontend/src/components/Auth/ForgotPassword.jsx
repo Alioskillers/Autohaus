@@ -12,8 +12,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       const res = await axios.post('/forgot-password/verify-reset', { email, phone });
-      const { token } = res.data;
-      navigate('/reset-password', { state: { token } });
+      navigate('/enter-otp', { state: { email } });
     } catch (err) {
       setError(err.response?.data?.message || 'Verification failed');
     }

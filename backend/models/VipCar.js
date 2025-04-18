@@ -8,7 +8,6 @@ const vipCarSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   topSpeed: { type: Number, required: true },
   stock: { type: Number, default: 0 },
-  image: { type: String, required: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model('VipCar', vipCarSchema);

@@ -2,11 +2,20 @@ const Car = require('../models/Car');
 const AuditLog = require('../models/AuditLog');
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const uploadFromUrl = require('../utils/uploadFromUrl');
 
 exports.getAllCars = async (req, res) => {
   try {
     const cars = await Car.find();
-    res.json(cars);
+
+    const carsWithImageUrls = cars.map(car => {
+      return {
+        ...car.toObject(),
+        imageUrl: `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${car._id}.jpg`
+      };
+    });
+
+    res.json(carsWithImageUrls);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -16,14 +25,23 @@ exports.getCarById = async (req, res) => {
   try {
     const car = await Car.findById(req.params.id);
     if (!car) return res.status(404).json({ message: 'Car not found' });
-    res.json(car);
+
+    const region = process.env.AWS_REGION;
+    const bucket = process.env.S3_BUCKET_NAME;
+
+    const carWithImage = {
+      ...car._doc,
+      imageUrl: `https://${bucket}.s3.${region}.amazonaws.com/${car._id}.jpg`,
+    };
+
+    res.json(carWithImage);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
 exports.addCar = async (req, res) => {
-  const { make, model, color, price, topSpeed, stock, image } = req.body;
+  let { make, model, color, price, topSpeed, stock, image } = req.body;
 
   if (!make || !model || !color || !price || !topSpeed || !stock || !image) {
     return res.status(400).json({ message: 'Missing required fields' });
@@ -37,11 +55,17 @@ exports.addCar = async (req, res) => {
       price,
       topSpeed,
       stock,
-      image,
     });
 
     await newCar.save();
-    res.status(201).json({ message: 'Car added successfully', car: newCar });
+    await uploadFromUrl(image, `${newCar._id}.jpg`);
+
+    res.status(201).json({
+      message: 'Car added successfully',
+      car: newCar,
+      imageUrl: `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${newCar._id}.jpg`
+    });
+
   } catch (err) {
     console.error('Error while adding car:', err);
     res.status(500).json({ message: 'Server error' });

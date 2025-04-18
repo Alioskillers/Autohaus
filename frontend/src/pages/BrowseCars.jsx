@@ -67,7 +67,7 @@ const BrowseCars = () => {
             onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
           >
             <img
-              src={car.image}
+               src={`https://autohaus-images.s3.eu-north-1.amazonaws.com/${car._id}.jpg`}
               alt={`${car.make} ${car.model}`}
               style={{ width: '100%', height: '200px', objectFit: 'cover' }}
             />

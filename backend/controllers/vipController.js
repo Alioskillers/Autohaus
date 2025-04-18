@@ -1,48 +1,72 @@
 const VipCar = require('../models/VipCar');
 const AuditLog = require('../models/AuditLog');
+const uploadFromUrl = require('../utils/uploadFromUrl');
+
 
 exports.getVipCars = async (req, res) => {
   try {
-    const cars = await VipCar.find({});
-    return res.status(200).json(cars);
-  } catch (error) {
-    console.error('Error fetching VIP cars:', error);
-    return res.status(500).json({ message: 'Server error fetching VIP cars' });
-  }
-};
+      const cars = await VipCar.find();
+  
+      const carsWithImageUrls = cars.map(car => {
+        return {
+          ...car.toObject(),
+          imageUrl: `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${car._id}.jpg`
+        };
+      });
+  
+      res.json(carsWithImageUrls);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
 
 exports.getVipCarById = async (req, res) => {
   try {
     const car = await VipCar.findById(req.params.id);
     if (!car) return res.status(404).json({ message: 'Car not found' });
-    res.json(car);
+
+    const region = process.env.AWS_REGION;
+    const bucket = process.env.S3_BUCKET_NAME;
+
+    const carWithImage = {
+      ...car._doc,
+      imageUrl: `https://${bucket}.s3.${region}.amazonaws.com/${car._id}.jpg`,
+    };
+
+    res.json(carWithImage);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
 exports.addVipCar = async (req, res) => {
-  const { make, model, color, price, topSpeed, stock, image } = req.body;
+  let { make, model, color, price, topSpeed, stock, image } = req.body;
 
   if (!make || !model || !color || !price || !topSpeed || !stock || !image) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
   try {
-    const newVipCar = new VipCar({
+    const newCar = new VipCar({
       make,
       model,
       color,
       price,
       topSpeed,
       stock,
-      image,
     });
 
-    await newVipCar.save();
-    res.status(201).json({ message: 'VIP Car added successfully', car: newVipCar });
+    await newCar.save();
+    await uploadFromUrl(image, `${newCar._id}.jpg`);
+
+    res.status(201).json({
+      message: 'Car added successfully',
+      car: newCar,
+      imageUrl: `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${newCar._id}.jpg`
+    });
+
   } catch (err) {
-    console.error('Error adding VIP car:', err);
+    console.error('Error while adding car:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };

@@ -45,6 +45,7 @@ import VerifyWorkerManagement from './pages/VerifyWorkerManagement';
 import AddVipCarPage from './pages/AddVipCarPage';
 import UpdateCarPricePage from './pages/UpdateCarPricePage';
 import VerifyUpdatePricePage from './pages/VerifyUpdatePricePage';
+import EnterOtp from './components/Auth/EnterOtp';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -64,6 +65,7 @@ const AppContent = () => {
         } />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/enter-otp" element={<EnterOtp />} />
         <Route
           path="/dashboard"
           element={
