@@ -19,5 +19,5 @@ services:
     depends_on:
       - redis
     restart: always
-volumes:
-  - ./backend/ml/model.pkl:/app/model.pkl
+    volumes:
+      - ./backend/ml/model.pkl:/app/model.pkl
