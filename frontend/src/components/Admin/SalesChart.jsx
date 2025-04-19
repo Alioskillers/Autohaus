@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axiosConfig';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 const SalesChart = () => {
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
 
   useEffect(() => {
     axios.get('/admin/orders/sales-chart').then(res => setData(res.data));

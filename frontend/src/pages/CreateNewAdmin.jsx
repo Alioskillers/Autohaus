@@ -9,6 +9,12 @@ const CreateNewAdmin = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

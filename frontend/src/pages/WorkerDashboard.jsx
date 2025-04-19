@@ -11,6 +11,12 @@ const WorkerDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     fetchCars();
   }, []);
 

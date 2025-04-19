@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from '../components/Spinner';
@@ -11,6 +11,11 @@ const AdminVipSettingsPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
 
   const handleSave = async (e) => {
     e.preventDefault();

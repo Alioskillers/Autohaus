@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
@@ -11,6 +11,11 @@ const AdminVerifyPage = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
 
   const handleVerify = async (e) => {
     e.preventDefault();

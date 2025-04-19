@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../api/axiosConfig';
+import { useNavigate } from 'react-router-dom';
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchOrders = async () => {

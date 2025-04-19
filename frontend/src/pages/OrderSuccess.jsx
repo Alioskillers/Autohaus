@@ -16,34 +16,64 @@ const OrderSuccess = () => {
   if (!state) return <p>Order not found.</p>;
 
   return (
-    <div style={{ backgroundColor: '#f7f7f7', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', fontFamily: 'Helvetica Neue, sans-serif' }}>
+    <div style={styles.wrapper}>
       {loading ? (
         <Spinner />
       ) : (
-      <div style={{ backgroundColor: '#fff', padding: '2.5rem', borderRadius: '12px', boxShadow: '0 6px 20px rgba(0,0,0,0.1)', maxWidth: '600px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '2rem', color: '#111', marginBottom: '1rem' }}>✅ Order Successful</h1>
-        <p><strong>Receipt #:</strong> {receipt}</p>
-        <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
-          Delivery Date: <strong>{new Date(state.deliveryDate).toLocaleDateString()}</strong>
-        </p>
-        <button
-          style={{
-            padding: '0.8rem 1.5rem',
-            backgroundColor: '#000',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '6px',
-            fontWeight: 'bold',
-            cursor: 'pointer'
-          }}
-          onClick={() => navigate('/dashboard')}
-        >
-          Back to Dashboard
-        </button>
-      </div>
+        <div style={styles.card}>
+          <h1 style={styles.title}>✅ Order Successful</h1>
+          <p><strong>Receipt #:</strong> {receipt}</p>
+          <p style={styles.delivery}>
+            Delivery Date: <strong>{new Date(state.deliveryDate).toLocaleDateString()}</strong>
+          </p>
+          <button style={styles.button} onClick={() => navigate('/dashboard')}>
+            Back to Dashboard
+          </button>
+        </div>
       )}
     </div>
   );
+};
+
+const styles = {
+  wrapper: {
+    backgroundColor: '#f7f7f7',
+    minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '2rem',
+    fontFamily: 'Helvetica Neue, sans-serif',
+  },
+  card: {
+    backgroundColor: '#fff',
+    padding: '2.5rem',
+    borderRadius: '12px',
+    boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+    maxWidth: '600px',
+    width: '100%',
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: '2rem',
+    color: '#111',
+    marginBottom: '1rem',
+  },
+  delivery: {
+    fontSize: '1.1rem',
+    marginBottom: '2rem',
+  },
+  button: {
+    padding: '0.8rem 1.5rem',
+    backgroundColor: '#000',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '6px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    width: '100%',
+    maxWidth: '300px',
+  },
 };
 
 export default OrderSuccess;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
@@ -12,6 +12,12 @@ const VerifyUpdatePricePage = () => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
 
   const handleVerify = async (e) => {
     e.preventDefault();

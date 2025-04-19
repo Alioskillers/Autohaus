@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import Spinner from '../components/Spinner';
@@ -6,6 +6,11 @@ import Spinner from '../components/Spinner';
 const WorkerManagement = () => {
   
   const navigate = useNavigate();
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
   const { role } = useAuth();
   const [loading, setLoading] = useState(false);
 

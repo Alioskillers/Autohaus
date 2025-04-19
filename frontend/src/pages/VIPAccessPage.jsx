@@ -1,4 +1,3 @@
-// /src/pages/VIPAccessPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -19,7 +18,11 @@ const VIPAccessPage = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('/api/vip-access', { username: vipUsername, password: vipPassword });
+      const response = await axios.post('/api/vip-access', {
+        username: vipUsername,
+        password: vipPassword
+      });
+
       if (response.data.message === 'Access granted') {
         navigate('/vip');
       } else {
@@ -28,8 +31,7 @@ const VIPAccessPage = () => {
     } catch (err) {
       console.error('Error verifying VIP access:', err);
       setError(err.response?.data?.message || 'Error verifying VIP access');
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -38,18 +40,15 @@ const VIPAccessPage = () => {
     <div style={styles.wrapper}>
       {loading && <Spinner />}
       <div style={styles.imageContainer}>
-        <img
-          src="/vip.jpg.webp"
-          alt="VIP Access Visual"
-          style={styles.image}
-        />
+        <img src="/vip.jpg.webp" alt="VIP Access Visual" style={styles.image} />
       </div>
 
-      {/* Right-Side Form Container */}
       <div style={styles.container}>
         <div style={styles.card}>
           <h1 style={styles.autohausHeader}>VIP ACCESS</h1>
-          <p style={styles.autohausSub}>Please enter your VIP credentials that you received via email.</p>
+          <p style={styles.autohausSub}>
+            Please enter your VIP credentials that you received via email.
+          </p>
 
           {error && <p style={styles.error}>{error}</p>}
           {message && <p style={styles.success}>{message}</p>}
@@ -73,11 +72,7 @@ const VIPAccessPage = () => {
               required
               style={styles.input}
             />
-            <button
-              type="submit"
-              disabled={loading}
-              style={styles.button}
-            >
+            <button type="submit" disabled={loading} style={styles.button}>
               {loading ? 'Authenticating...' : 'Access'}
             </button>
           </form>
@@ -90,28 +85,27 @@ const VIPAccessPage = () => {
 const styles = {
   wrapper: {
     display: 'flex',
+    flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
     height: '100vh',
     fontFamily: 'IconianSans, Helvetica Neue, sans-serif'
   },
-
   imageContainer: {
-    flex: 1
+    flex: 1,
+    height: window.innerWidth <= 768 ? '280px' : '100vh'
   },
-
   image: {
     width: '100%',
     height: '100%',
     objectFit: 'cover'
   },
-
   container: {
     flex: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f7f7f7'
+    backgroundColor: '#f7f7f7',
+    padding: '2rem'
   },
-
   card: {
     backgroundColor: '#fff',
     padding: '2.5rem 2rem',
@@ -121,20 +115,16 @@ const styles = {
     maxWidth: '480px',
     textAlign: 'center'
   },
-
   autohausHeader: {
     fontSize: '1.5rem',
     marginBottom: '0.5rem',
-    fontWeight: 'bold',
-    fontFamily: 'IconianSans, Helvetica Neue, sans-serif'
+    fontWeight: 'bold'
   },
-
   autohausSub: {
     fontSize: '0.95rem',
     marginBottom: '1.8rem',
     color: '#333'
   },
-
   input: {
     display: 'block',
     width: '65%',
@@ -156,12 +146,10 @@ const styles = {
     fontWeight: 'bold',
     cursor: 'pointer'
   },
-
-  eerror: {
+  error: {
     color: 'red',
     marginBottom: '1rem'
   },
-
   success: {
     color: 'green',
     marginBottom: '1rem'

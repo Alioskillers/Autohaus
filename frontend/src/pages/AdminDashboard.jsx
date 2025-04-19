@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TotalSales from '../components/Admin/TotalSales';
 import SalesChart from '../components/Admin/SalesChart';
 import OrderList from '../components/Admin/OrderList';
@@ -7,6 +7,12 @@ import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
 
   return (
     <div style={styles.container}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
@@ -16,6 +16,12 @@ const AddCarPage = () => {
   });
 
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

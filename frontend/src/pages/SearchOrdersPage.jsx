@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../api/axiosConfig';
 import Spinner from '../components/Spinner';
 
 const SearchOrdersPage = () => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState({ email: '', phone: '', receipt: '', date: '' });
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setQuery({ ...query, [e.target.name]: e.target.value });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,12 +6,19 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/forgot-password/verify-reset', { email, phone });
+      await axios.post('/forgot-password/verify-reset', { email, phone });
       navigate('/enter-otp', { state: { email } });
     } catch (err) {
       setError(err.response?.data?.message || 'Verification failed');
@@ -19,13 +26,17 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div style={styles.wrapper}>
-      <div style={styles.imageContainer}>
-        <img src="/forgot.jpg" alt="Forgot Password" style={styles.image} />
+    <div style={{ ...styles.wrapper, flexDirection: isMobile ? 'column' : 'row' }}>
+      <div style={{ ...styles.imageContainer, height: isMobile ? '45vh' : '100vh' }}>
+        <img
+          src="/forgot.jpg"
+          alt="Forgot Password"
+          style={{ ...styles.image, objectPosition: isMobile ? 'top center' : 'center' }}
+        />
       </div>
 
-      <div style={styles.container}>
-        <div style={styles.card}>
+      <div style={{ ...styles.container, height: isMobile ? 'auto' : '100vh', padding: isMobile ? '2rem 1.5rem' : 0 }}>
+        <div style={{ ...styles.card, padding: isMobile ? '2rem 1.5rem' : '3rem 3rem' }}>
           <h2 style={styles.title}>Forgot Password</h2>
           {error && <p style={styles.error}>{error}</p>}
           <form onSubmit={handleSubmit}>
@@ -35,6 +46,7 @@ const ForgotPassword = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               style={styles.input}
+              required
             />
             <input
               type="tel"
@@ -42,6 +54,7 @@ const ForgotPassword = () => {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               style={styles.input}
+              required
             />
             <button type="submit" style={styles.button}>Verify</button>
           </form>
@@ -54,28 +67,28 @@ const ForgotPassword = () => {
 const styles = {
   wrapper: {
     display: 'flex',
-    height: '100vh',
     fontFamily: 'Helvetica Neue, sans-serif',
+    width: '100%',
+    overflow: 'hidden',
   },
   imageContainer: {
     flex: 1,
+    overflow: 'hidden',
   },
   image: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
-    objectPosition: 'center',
   },
   container: {
     flex: 1,
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#f7f7f7',
   },
   card: {
     backgroundColor: '#fff',
-    padding: '3rem 3rem',
     borderRadius: '12px',
     boxShadow: '0 6px 18px rgba(0,0,0,0.1)',
     width: '100%',
@@ -91,8 +104,8 @@ const styles = {
     display: 'block',
     width: '100%',
     padding: '1rem',
-    fontSize: '1.2rem',
-    marginBottom: '1.5rem',
+    fontSize: '1.1rem',
+    marginBottom: '1.2rem',
     borderRadius: '6px',
     border: '1px solid #ccc',
   },

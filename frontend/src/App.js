@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthContext';
 import { BasketProvider } from './context/BasketContext';
@@ -9,6 +9,7 @@ import Layout from './components/Layout';
 // Shared Components
 import Navbar from './components/Shared/Navbar';
 import BasketModal from './components/Basket/BasketModal';
+import MobileNavbar from './components/Shared/MobileNavbar';
 
 // Auth Components
 import Login from './components/Auth/Login';
@@ -46,13 +47,21 @@ import AddVipCarPage from './pages/AddVipCarPage';
 import UpdateCarPricePage from './pages/UpdateCarPricePage';
 import VerifyUpdatePricePage from './pages/VerifyUpdatePricePage';
 import EnterOtp from './components/Auth/EnterOtp';
+import Forbidden from './pages/Forbidden';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 600);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <>
-      <Navbar />
+      {isMobile ? <MobileNavbar /> : <Navbar />}
       {showBasket && <BasketModal isOpen={showBasket} onClose={toggleBasketModal} />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -244,6 +253,7 @@ const AppContent = () => {
             </Layout>
           }
         />
+        <Route path="/forbidden" element={<Forbidden />} />
         <Route path="/admin/verify-management" element={
           <Layout>
   <ProtectedRoute allowedRoles={['Admin', 'Global-Admin']}>

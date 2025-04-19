@@ -1,5 +1,5 @@
 // /pages/VerifyManagement.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
@@ -9,6 +9,11 @@ const VerifyManagement = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
   const [loading, setLoading] = useState(false);
 
   const handleVerify = async (e) => {

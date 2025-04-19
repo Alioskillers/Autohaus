@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useBasket } from '../../context/BasketContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,9 +7,22 @@ const BasketModal = () => {
   const navigate = useNavigate();
 
   const total = basket.reduce((sum, item) => sum + item.car.price * item.quantity, 0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 600);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
-    <div style={overlayStyle} onClick={(e) => e.stopPropagation()}>
+    <div
+      style={{
+        ...overlayStyle,
+        ...(isMobile ? mobileOverlayStyle : {}),
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
       <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
         {/* ❌ Close Button */}
         <button onClick={toggleBasketModal} style={closeBtn}>×</button>
@@ -22,9 +35,13 @@ const BasketModal = () => {
             {basket.map((item) => (
               <div key={item.car._id} style={itemStyle}>
                 <div style={{ flex: 1 }}>
-                  <h3 style={{ margin: '0 0 0.25rem 0' }}>{item.car.make} {item.car.model}</h3>
+                  <h3 style={{ margin: '0 0 0.25rem 0' }}>
+                    {item.car.make} {item.car.model}
+                  </h3>
                   <p style={subtleText}>Quantity: {item.quantity}</p>
-                  <p style={subtleText}>Subtotal: <strong>${(item.car.price * item.quantity).toLocaleString()}</strong></p>
+                  <p style={subtleText}>
+                    Subtotal: <strong>${(item.car.price * item.quantity).toLocaleString()}</strong>
+                  </p>
                 </div>
                 <button onClick={() => removeFromBasket(item.car._id)} style={removeBtn}>✖</button>
               </div>
@@ -33,13 +50,18 @@ const BasketModal = () => {
             <div style={footerStyle}>
               <p style={totalText}>Total: ${total.toLocaleString()}</p>
               <div style={buttonGroup}>
-                <button onClick={() => {
-                  toggleBasketModal();
-                  navigate('/checkout');
-                }} style={checkoutBtn}>
+                <button
+                  onClick={() => {
+                    toggleBasketModal();
+                    navigate('/checkout');
+                  }}
+                  style={checkoutBtn}
+                >
                   Proceed to Checkout
                 </button>
-                <button onClick={clearBasket} style={clearBtn}>Clear Basket</button>
+                <button onClick={clearBasket} style={clearBtn}>
+                  Clear Basket
+                </button>
               </div>
             </div>
           </div>
@@ -64,6 +86,16 @@ const overlayStyle = {
   fontFamily: 'Helvetica Neue, sans-serif',
 };
 
+const mobileOverlayStyle = {
+  width: '100%',
+  padding: '1.5rem',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  height: '100vh',
+};
+
 const modalStyle = {
   position: 'relative',
   display: 'flex',
@@ -78,7 +110,7 @@ const closeBtn = {
   border: 'none',
   fontSize: '1.5rem',
   cursor: 'pointer',
-  color: '#333'
+  color: '#333',
 };
 
 const titleStyle = {
@@ -124,6 +156,7 @@ const totalText = {
 const buttonGroup = {
   display: 'flex',
   gap: '1rem',
+  flexWrap: 'wrap',
 };
 
 const checkoutBtn = {

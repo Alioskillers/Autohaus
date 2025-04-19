@@ -19,6 +19,8 @@ const Signup = () => {
   });
   const [error, setError] = useState('');
 
+  const isMobile = window.innerWidth <= 768;
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -31,6 +33,7 @@ const Signup = () => {
     setLoading(true);
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
+      setLoading(false);
       return;
     }
     try {
@@ -41,9 +44,10 @@ const Signup = () => {
       const role = res.data.role;
       login(role);
       navigate('/dashboard');
-  
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,14 +58,24 @@ const Signup = () => {
   };
 
   return (
-    <div style={styles.wrapper}>
+    <div style={{ ...styles.wrapper, flexDirection: isMobile ? 'column' : 'row' }}>
       {loading && <Spinner />}
+      
       <div style={styles.imageContainer}>
         <img src="/signup.jpg" alt="Signup Visual" style={styles.image} />
       </div>
 
-      <div style={styles.container}>
-        <div style={styles.card}>
+      <div style={{
+        ...styles.container,
+        padding: isMobile ? '2rem 1rem' : '2rem',
+        justifyContent: isMobile ? 'flex-start' : 'center'
+      }}>
+        <div style={{
+          ...styles.card,
+          marginTop: isMobile ? '2rem' : 0,
+          width: isMobile ? '100%' : '100%',
+          maxWidth: isMobile ? '100%' : '480px'
+        }}>
           <h1 style={styles.autohausHeader}>Create your personal Autohaus ID</h1>
           <p style={styles.autohausSub}>Your access to the world of Autohaus</p>
 
@@ -124,7 +138,8 @@ const styles = {
     fontFamily: 'IconianSans, Helvetica Neue, sans-serif'
   },
   imageContainer: {
-    flex: 1
+    flex: 1,
+    minHeight: '300px'
   },
   image: {
     width: '100%',
@@ -135,7 +150,6 @@ const styles = {
     flex: 1,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#f7f7f7'
   },
   card: {
@@ -145,7 +159,8 @@ const styles = {
     boxShadow: '0 6px 18px rgba(0,0,0,0.1)',
     width: '100%',
     maxWidth: '480px',
-    textAlign: 'center'
+    textAlign: 'center',
+    margin: '0 auto'
   },
   autohausHeader: {
     fontSize: '1.5rem',

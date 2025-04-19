@@ -42,10 +42,10 @@ const CarDetails = () => {
       <h2 style={heading}>{car.make} {car.model}</h2>
 
       <img
-  src={`https://autohaus-images.s3.eu-north-1.amazonaws.com/${car._id}.jpg`}
-  alt={car.model}
-  style={image}
-/>
+        src={`https://autohaus-images.s3.eu-north-1.amazonaws.com/${car._id}.jpg`}
+        alt={car.model}
+        style={image}
+      />
 
       <div style={infoGrid}>
         <p><strong>Color:</strong> {car.color}</p>
@@ -89,7 +89,7 @@ const CarDetails = () => {
             style={inputStyle}
           />
           <p style={{ marginTop: '0.5rem', fontWeight: 500 }}>
-          Estimated Rent: <span style={{ fontWeight: 700 }}>${totalRental}</span>
+            Estimated Rent: <span style={{ fontWeight: 700 }}>${totalRental}</span>
           </p>
         </div>
       )}
@@ -110,17 +110,19 @@ const CarDetails = () => {
           onChange={(e) => setQuantity(parseInt(e.target.value))}
           style={inputStyle}
         />
-        <button
-          onClick={() => addToBasket(car, quantity)}
-          disabled={isOutOfStock}
-          style={{
-            ...addButton,
-            backgroundColor: isOutOfStock ? '#ccc' : '#111',
-            cursor: isOutOfStock ? 'not-allowed' : 'pointer'
-          }}
-        >
-          🛒 Add to Basket
-        </button>
+        <div style={{ marginTop: '1rem' }}>
+          <button
+            onClick={() => addToBasket(car, quantity)}
+            disabled={isOutOfStock}
+            style={{
+              ...addButton,
+              backgroundColor: isOutOfStock ? '#ccc' : '#111',
+              cursor: isOutOfStock ? 'not-allowed' : 'pointer'
+            }}
+          >
+            🛒 Add to Basket
+          </button>
+        </div>
       </div>
 
       <style>
@@ -137,6 +139,17 @@ const CarDetails = () => {
           .toggle-button.active {
             background: #111;
             color: white;
+          }
+
+          @media (max-width: 600px) {
+            div[style*="maxWidth: '800px'"] {
+              margin: 1rem;
+              padding: 1.5rem;
+            }
+
+            img {
+              max-height: 300px !important;
+            }
           }
         `}
       </style>
@@ -206,7 +219,6 @@ const inputStyle = {
 };
 
 const addButton = {
-  marginLeft: '1rem',
   padding: '0.7rem 1.5rem',
   fontSize: '1rem',
   border: 'none',

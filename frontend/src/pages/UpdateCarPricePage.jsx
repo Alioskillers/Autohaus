@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../api/axiosConfig';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Spinner from '../components/Spinner';
@@ -7,6 +7,11 @@ const UpdateCarPricePage = () => {
   const [form, setForm] = useState({ make: '', model: '', price: '' });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
   const location = useLocation();
   const [loading, setLoading] = useState(false);
 

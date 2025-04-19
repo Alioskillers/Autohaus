@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axiosConfig';
 import { useAuth } from '../../auth/AuthContext';
@@ -10,6 +10,13 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,33 +26,33 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('/auth/login', formData, {
-        withCredentials: true,
-      });
-  
-      const res = await axios.get('/auth/me', {
-        withCredentials: true,
-      });
-  
+      await axios.post('/auth/login', formData, { withCredentials: true });
+      const res = await axios.get('/auth/me', { withCredentials: true });
       const role = res.data.role;
       login(role);
-  
+
       if (role === 'Admin' || role === 'Global-Admin') navigate('/admin');
       else if (role === 'Worker' || role === 'Workers-Admin') navigate('/worker');
       else navigate('/dashboard');
-  
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Helvetica Neue, sans-serif', overflow: 'hidden' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        minHeight: '100vh',
+        fontFamily: 'Helvetica Neue, sans-serif'
+      }}
+    >
       {loading && <Spinner />}
-      <div style={{ flex: 1, height: '100vh', overflow: 'hidden' }}>
+
+      <div style={{ flex: 1, height: isMobile ? '50vh' : '100vh', overflow: 'hidden' }}>
         <img
           src="/login.jpg"
           alt="Login Visual"
@@ -58,38 +65,26 @@ const Login = () => {
         />
       </div>
 
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#fafafa',
-        padding: '2rem'
-      }}>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#fafafa',
+          padding: isMobile ? '2rem 1rem' : '2rem'
+        }}
+      >
         <div style={{ maxWidth: '380px', width: '100%' }}>
-          <h1 style={{
-            textAlign: 'center',
-            fontSize: '1.5rem',
-            letterSpacing: '1px',
-            fontWeight: 'bold',
-            marginBottom: '1.5rem'
-          }}>
+          <h1 style={{ textAlign: 'center', fontSize: '1.5rem', letterSpacing: '1px', fontWeight: 'bold', marginBottom: '1.5rem' }}>
             AUTOHAUS
           </h1>
 
-          <h2 style={{
-            fontSize: '1.75rem',
-            fontWeight: 600,
-            marginBottom: '1rem'
-          }}>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 600, marginBottom: '1rem' }}>
             Welcome! Log in with your Autohaus ID
           </h2>
 
-          <p style={{
-            fontSize: '0.9rem',
-            marginBottom: '1.5rem',
-            color: '#333'
-          }}>
+          <p style={{ fontSize: '0.9rem', marginBottom: '1.5rem', color: '#333' }}>
             Please enter the e-mail address and password you registered with.
           </p>
 
@@ -103,16 +98,8 @@ const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              style={{
-                width: '100%',
-                padding: '0.8rem',
-                borderRadius: '5px',
-                border: '1px solid #ccc',
-                marginBottom: '1rem',
-                fontSize: '1rem'
-              }}
+              style={inputStyle}
             />
-
             <input
               name="password"
               type="password"
@@ -120,84 +107,94 @@ const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              style={{
-                width: '100%',
-                padding: '0.8rem',
-                borderRadius: '5px',
-                border: '1px solid #ccc',
-                marginBottom: '0.5rem',
-                fontSize: '1rem'
-              }}
+              style={inputStyle}
             />
-
-            <button
-              type="submit"
-              style={{
-                width: '100%',
-                padding: '0.9rem',
-                backgroundColor: '#000',
-                color: '#fff',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                marginBottom: '1.5rem'
-              }}
-            >
-              Login
-            </button>
+            <button type="submit" style={loginButtonStyle}>Login</button>
           </form>
 
           <p style={{ textAlign: 'center', marginTop: '1rem' }}>
-            <button
-              onClick={() => navigate('/forgot-password')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#000',
-                fontSize: '0.95rem',
-                cursor: 'pointer',
-                textDecoration: 'underline',
-                fontWeight: '500'
-              }}
-            >
+            <button onClick={() => navigate('/forgot-password')} style={linkButtonStyle}>
               Forgot your password?
             </button>
           </p>
 
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            textAlign: 'center',
-            margin: '1.5rem 0',
-            color: '#aaa'
-          }}>
-            <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }} />
-            <span style={{ margin: '0 1rem', fontSize: '0.85rem' }}>or</span>
-            <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }} />
+          <div style={dividerStyle}>
+            <div style={lineStyle} />
+            <span style={orStyle}>or</span>
+            <div style={lineStyle} />
           </div>
 
-          <button
-            onClick={() => navigate('/signup')}
-            style={{
-              width: '100%',
-              padding: '0.8rem',
-              border: '1px solid #000',
-              background: 'transparent',
-              color: '#000',
-              fontWeight: 'bold',
-              fontSize: '1rem',
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
-          >
+          <button onClick={() => navigate('/signup')} style={signupButtonStyle}>
             Don’t have an Autohaus ID? <strong>Sign up</strong>
           </button>
         </div>
       </div>
     </div>
   );
+};
+
+// Style objects
+const inputStyle = {
+  width: '100%',
+  padding: '0.8rem',
+  borderRadius: '5px',
+  border: '1px solid #ccc',
+  marginBottom: '1rem',
+  fontSize: '1rem'
+};
+
+const loginButtonStyle = {
+  width: '100%',
+  padding: '0.9rem',
+  backgroundColor: '#000',
+  color: '#fff',
+  fontWeight: 'bold',
+  fontSize: '1rem',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  marginBottom: '1.5rem'
+};
+
+const linkButtonStyle = {
+  background: 'none',
+  border: 'none',
+  color: '#000',
+  fontSize: '0.95rem',
+  cursor: 'pointer',
+  textDecoration: 'underline',
+  fontWeight: '500'
+};
+
+const dividerStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  textAlign: 'center',
+  margin: '1.5rem 0',
+  color: '#aaa'
+};
+
+const lineStyle = {
+  flex: 1,
+  height: '1px',
+  backgroundColor: '#ccc'
+};
+
+const orStyle = {
+  margin: '0 1rem',
+  fontSize: '0.85rem'
+};
+
+const signupButtonStyle = {
+  width: '100%',
+  padding: '0.8rem',
+  border: '1px solid #000',
+  background: 'transparent',
+  color: '#000',
+  fontWeight: 'bold',
+  fontSize: '1rem',
+  borderRadius: '5px',
+  cursor: 'pointer'
 };
 
 export default Login;

@@ -12,7 +12,6 @@ const VipCarDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [type, setType] = useState('purchase');
-  const [period, setPeriod] = useState(1);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -41,10 +40,10 @@ const VipCarDetails = () => {
       <h2 style={heading}>{car.make} {car.model}</h2>
 
       <img
-  src={car.imageUrl || `https://autohaus-images.s3.eu-north-1.amazonaws.com/${car._id}.jpg`}
-  alt={`${car.make} ${car.model}`}
-  style={image}
-/>
+        src={car.imageUrl || `https://autohaus-images.s3.eu-north-1.amazonaws.com/${car._id}.jpg`}
+        alt={`${car.make} ${car.model}`}
+        style={image}
+      />
 
       <div style={infoGrid}>
         <p><strong>Color:</strong> {car.color}</p>
@@ -77,7 +76,7 @@ const VipCarDetails = () => {
         </p>
       )}
 
-      <div style={{ marginTop: '2rem' }}>
+      <div style={quantityRow}>
         <label><strong>Quantity:</strong></label>
         <input
           type="number"
@@ -87,6 +86,9 @@ const VipCarDetails = () => {
           onChange={(e) => setQuantity(parseInt(e.target.value))}
           style={inputStyle}
         />
+      </div>
+
+      <div style={buttonWrapper}>
         <button
           onClick={() => addToBasket(car, quantity)}
           disabled={isOutOfStock}
@@ -114,6 +116,12 @@ const VipCarDetails = () => {
           .toggle-button.active {
             background: #111;
             color: white;
+          }
+
+          @media (max-width: 768px) {
+            div[style*="padding: 2rem"] {
+              padding: 1rem !important;
+            }
           }
         `}
       </style>
@@ -182,8 +190,21 @@ const inputStyle = {
   width: '80px'
 };
 
+const quantityRow = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '1rem',
+  marginTop: '2rem',
+  marginBottom: '1rem'
+};
+
+const buttonWrapper = {
+  display: 'flex',
+  justifyContent: 'flex-start',
+  marginTop: '0.5rem'
+};
+
 const addButton = {
-  marginLeft: '1rem',
   padding: '0.7rem 1.5rem',
   fontSize: '1rem',
   border: 'none',

@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axiosConfig';
 
 const OrderSearch = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      navigate('/forbidden');
+    }
+  }, [navigate]);
+
   const [filters, setFilters] = useState({ email: '', phone: '', receipt: '', date: '' });
   const [results, setResults] = useState([]);
 
