@@ -268,3 +268,9 @@ button {
     transform: scaleY(2.5);
   }
 }
+
+.no-global-reset * {
+  margin: revert;
+  padding: revert;
+  box-sizing: border-box;
+}

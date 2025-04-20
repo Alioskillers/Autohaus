@@ -57,8 +57,18 @@ const Signup = () => {
     3: 'Set Password'
   };
 
+  const password = formData.password;
+  const passwordChecks = [
+    { label: 'At least 8 characters', valid: password.length >= 8 },
+    { label: 'At least 1 lowercase letter', valid: /[a-z]/.test(password) },
+    { label: 'At least 1 uppercase letter', valid: /[A-Z]/.test(password) },
+    { label: 'At least 1 number', valid: /[0-9]/.test(password) },
+    { label: 'At least 1 symbol', valid: /[^A-Za-z0-9]/.test(password) }
+  ];
+
   return (
-    <div style={{ ...styles.wrapper, flexDirection: isMobile ? 'column' : 'row' }}>
+    <div className="no-global-reset">
+      <div style={{ ...styles.wrapper, flexDirection: isMobile ? 'column' : 'row' }}>
       {loading && <Spinner />}
       
       <div style={styles.imageContainer}>
@@ -72,7 +82,7 @@ const Signup = () => {
       }}>
         <div style={{
           ...styles.card,
-          marginTop: isMobile ? '2rem' : 0,
+          marginTop: isMobile ? '2rem' : '5.75rem',
           width: isMobile ? '100%' : '100%',
           maxWidth: isMobile ? '100%' : '480px'
         }}>
@@ -118,7 +128,21 @@ const Signup = () => {
           {step === 3 && (
             <form onSubmit={handleSubmit}>
               <input name="password" type="password" placeholder="Password" onChange={handleChange} value={formData.password} required style={styles.input} />
-              <input name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} value={formData.confirmPassword} required style={{ ...styles.input, marginBottom: '1.8rem' }} />
+              <input name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} value={formData.confirmPassword} required style={styles.input} />
+              <ul style={{ listStyle: 'none', padding: 0, marginBottom: '1.5rem' }}>
+                {passwordChecks.map((rule, idx) => (
+                  <li key={idx} style={{ color: rule.valid ? 'green' : 'red', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
+                    <span style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '50%',
+                      backgroundColor: rule.valid ? 'green' : 'red'
+                    }} />
+                    {rule.label}
+                  </li>
+                ))}
+              </ul>
               <div style={styles.navButtons}>
                 <button type="button" onClick={prevStep} style={styles.backButton}>Back</button>
                 <button type="submit" style={styles.button}>Create Account</button>
@@ -127,6 +151,7 @@ const Signup = () => {
           )}
         </div>
       </div>
+      </div>
     </div>
   );
 };
@@ -134,12 +159,14 @@ const Signup = () => {
 const styles = {
   wrapper: {
     display: 'flex',
+    flexDirection: 'row',
     height: '100vh',
     fontFamily: 'IconianSans, Helvetica Neue, sans-serif'
   },
   imageContainer: {
     flex: 1,
-    minHeight: '300px'
+    height: '100vh',
+    overflow: 'hidden'
   },
   image: {
     width: '100%',
@@ -150,7 +177,9 @@ const styles = {
     flex: 1,
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#f7f7f7'
+    justifyContent: 'center',
+    backgroundColor: '#f7f7f7',
+    height: '100vh'
   },
   card: {
     backgroundColor: '#fff',
@@ -160,7 +189,7 @@ const styles = {
     width: '100%',
     maxWidth: '480px',
     textAlign: 'center',
-    margin: '0 auto'
+    margin: '4rem auto 0 auto'
   },
   autohausHeader: {
     fontSize: '1.5rem',
@@ -199,10 +228,11 @@ const styles = {
   },
   input: {
     display: 'block',
-    width: '65%',
+    width: '100%',
+    maxWidth: '320px',
     padding: '0.6rem',
     fontSize: '0.95rem',
-    margin: '0 auto 1rem auto',
+    margin: '0.5rem auto',
     borderRadius: '6px',
     border: '1px solid #ccc'
   },

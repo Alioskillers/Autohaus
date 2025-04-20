@@ -20,6 +20,16 @@ const getProfile = async (req, res) => {
 
 const register = async (req, res) => {
   const { email, password, phone, role } = req.body;
+
+  const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+  if (!strongPasswordPattern.test(password)) {
+    return res.status(400).json({
+      message:
+'Conditions Not Met'
+    });
+  }
+
   try {
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: 'Email already exists' });
