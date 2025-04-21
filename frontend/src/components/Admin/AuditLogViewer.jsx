@@ -38,7 +38,7 @@ const AuditLogViewer = () => {
 
     const filtered = logs.filter((log) => {
       const matchesEmail = log.userEmail.toLowerCase().includes(lowerEmail);
-      const matchesModel = log.carId?.model?.toLowerCase().includes(lowerModel);
+      const matchesModel = log.car?.toLowerCase().includes(lowerModel);
       return matchesEmail && matchesModel;
     });
 
@@ -101,11 +101,9 @@ const AuditLogViewer = () => {
           {filteredLogs.map((log) => (
             <tr key={log._id}>
               <td>{log.userEmail}</td>
-              <td>{log.carId ? `${log.carId.make} ${log.carId.model}` : '—'}</td>
+              <td>{log.car || '—'}</td>
               <td>
-                <pre style={{ fontSize: '0.85rem' }}>
-                  {JSON.stringify(log.updates, null, 2)}
-                </pre>
+                Added: {log.addedStock}, New: {log.newStock}
               </td>
               <td>{new Date(log.timestamp).toLocaleString()}</td>
             </tr>

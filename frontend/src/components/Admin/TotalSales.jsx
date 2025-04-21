@@ -13,13 +13,17 @@ const TotalSales = () => {
   }, [navigate]);
 
   useEffect(() => {
-    axios.get('/admin/orders/total-sales').then(res => setTotal(res.data.total));
+    axios.get('/admin/orders/total-sales').then(res => setTotal(res.data.totalSalesValue));
   }, []);
 
   return (
     <div>
-      <h3>Total Sales</h3>
-      <p>${(total || 0).toLocaleString()}</p>
+      <h3>Grand Total:</h3>
+      <div style={{ textAlign: 'center' }}>
+        <p style={{ fontWeight: 'bold', fontSize: '1.8rem' }}>
+          {(total || 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' })}
+        </p>
+      </div>
     </div>
   );
 };

@@ -274,3 +274,8 @@ button {
   padding: revert;
   box-sizing: border-box;
 }
+
+.no-global-reset {
+  overflow-x: visible !important;
+  max-width: none !important;
+}
