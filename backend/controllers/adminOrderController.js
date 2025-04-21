@@ -1,6 +1,5 @@
 const Order = require('../models/Order');
 const User = require('../models/User');
-const Car = require('../models/Car');
 const { formatDate, formatCurrency } = require('../utils/formatUtils');
 
 // View all orders with pagination and formatting
@@ -76,7 +75,7 @@ exports.searchOrders = async (req, res) => {
       id: order._id,
       user: order.user,
       car: order.car,
-      receipt: order.receiptNumber,
+      receiptNumber: order.receiptNumber || 'N/A',
       type: order.type,
       period: order.period,
       totalAmount: order.totalAmount,
@@ -94,7 +93,7 @@ exports.searchOrders = async (req, res) => {
 exports.getTotalSales = async (req, res) => {
   try {
     const orders = await Order.find().populate('car');
-    const total = orders.reduce((sum, order) => sum + (order.car.price || 0), 0);
+    const total = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
     res.json({ totalSalesValue: formatCurrency(total) });
   } catch (err) {
     res.status(500).json({ message: err.message });
