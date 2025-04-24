@@ -33,6 +33,9 @@ const AdminManagement = () => {
           <button onClick={() => handleNavigation('/admin/orders')} style={styles.button}>
             Search Orders
           </button>
+          <button onClick={() => handleNavigation('/admin/verify-downtime')} style={styles.button}>
+            Schedule Downtime
+          </button>
         </div>
       </div>
     </div>

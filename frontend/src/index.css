@@ -279,3 +279,10 @@ button {
   overflow-x: visible !important;
   max-width: none !important;
 }
+
+
+.downtime-disable-buttons nav a:not(.admin-access),
+.downtime-disable-buttons nav button:not(.admin-access) {
+  pointer-events: none !important;
+  opacity: 0.5;
+}

@@ -55,6 +55,7 @@ app.use('/api/global-admin', require('./routes/globalAdminRoutes'));
 app.use('/api', require('./routes/managementRoutes'));
 app.use('/api/worker', require('./routes/workerRoutes'));
 app.use('/api/images', require('./routes/imageRoutes'));
+app.use('/api/downtime', require('./routes/downtime'));
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 

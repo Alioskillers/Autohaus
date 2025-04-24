@@ -48,6 +48,10 @@ import UpdateCarPricePage from './pages/UpdateCarPricePage';
 import VerifyUpdatePricePage from './pages/VerifyUpdatePricePage';
 import EnterOtp from './components/Auth/EnterOtp';
 import Forbidden from './pages/Forbidden';
+import VerifyDowntime from './pages/VerifyDowntime';
+import ScheduleDowntime from './components/Admin/ScheduleDowntime';
+import Downtime from './pages/Downtime';
+import DowntimeGuard from './components/DowntimeGuard';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -75,6 +79,15 @@ const AppContent = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/enter-otp" element={<EnterOtp />} />
+        <Route path="/downtime" element={<Downtime />} />
+        <Route path="/admin/verify-downtime" element={<VerifyDowntime />} />
+        <Route path="/admin/schedule-downtime" element={
+          <Layout>
+            <ProtectedRoute allowedRoles={['Global-Admin']}>
+              <ScheduleDowntime />
+            </ProtectedRoute>
+          </Layout>
+        } />
         <Route
           path="/dashboard"
           element={
@@ -323,7 +336,9 @@ const App = () => {
     <AuthProvider>
       <BasketProvider>
         <Router>
-          <AppContent />
+          <DowntimeGuard>
+            <AppContent />
+          </DowntimeGuard>
         </Router>
       </BasketProvider>
     </AuthProvider>

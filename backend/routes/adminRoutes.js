@@ -56,4 +56,28 @@ router.post('/admin/vip-settings', async (req, res) => {
     }
   });
 
+// Route for verifying global admin identity (used for downtime bypass authentication)
+router.post('/global-admin/verify', async (req, res) => {
+  const { username, password, role } = req.body;
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.role !== role) {
+      return res.status(403).json({ message: 'User is not authorized as ' + role });
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    res.json({ message: 'Verification successful' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
