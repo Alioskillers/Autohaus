@@ -11,8 +11,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "axios":"^1.8.4",
     "@aws-sdk/client-s3": "^3.787.0",
+    "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -26,6 +26,7 @@
     "mongoose": "^8.13.1",
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.10.1",
+    "react-barcode": "^1.6.1",
     "recharts": "^2.15.1",
     "redis": "^4.7.0",
     "session": "^0.1.0"

@@ -52,6 +52,8 @@ import VerifyDowntime from './pages/VerifyDowntime';
 import ScheduleDowntime from './components/Admin/ScheduleDowntime';
 import Downtime from './pages/Downtime';
 import DowntimeGuard from './components/DowntimeGuard';
+import VerifyGenerateVIN from './pages/VerifyGenerateVIN';
+import GenerateVIN from './pages/GenerateVin';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -322,6 +324,26 @@ const AppContent = () => {
       <Layout>
         <ProtectedRoute allowedRoles={['Workers-Admin']}>
           <UpdateCarPricePage />
+        </ProtectedRoute>
+      </Layout>
+    }
+  />
+  <Route
+    path="/worker/verify-generate-vin"
+    element={
+      <Layout>
+        <ProtectedRoute allowedRoles={['Workers-Admin']}>
+          <VerifyGenerateVIN />
+        </ProtectedRoute>
+      </Layout>
+    }
+  />
+  <Route
+    path="/worker/generate-vin"
+    element={
+      <Layout>
+        <ProtectedRoute allowedRoles={['Workers-Admin']}>
+          <GenerateVIN />
         </ProtectedRoute>
       </Layout>
     }

@@ -56,6 +56,7 @@ app.use('/api', require('./routes/managementRoutes'));
 app.use('/api/worker', require('./routes/workerRoutes'));
 app.use('/api/images', require('./routes/imageRoutes'));
 app.use('/api/downtime', require('./routes/downtime'));
+app.use('/api/vin', require('./routes/vinRoutes'));
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 

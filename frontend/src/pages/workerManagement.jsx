@@ -27,15 +27,20 @@ const WorkerManagement = () => {
 
       <div style={styles.actions}>
         <button style={styles.button} onClick={() => handleNavigate('/add-car')}>
-        Add Car
+          Add Car
         </button>
         <button style={styles.button} onClick={() => handleNavigate('/add-vip-car')}>
-        Add VIP Car
+          Add VIP Car
         </button>
         {role === 'Workers-Admin' && (
-          <button style={styles.button} onClick={() => handleNavigate('/worker/verify-update-price')}>
-        Update Car Price
-          </button>
+          <>
+            <button style={styles.button} onClick={() => handleNavigate('/worker/verify-update-price')}>
+              Update Car Price
+            </button>
+            <button style={styles.button} onClick={() => handleNavigate('/worker/verify-generate-vin')}>
+              Generate VIN
+            </button>
+          </>
         )}
       </div>
     </div>

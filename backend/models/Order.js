@@ -16,6 +16,11 @@ const orderSchema = new mongoose.Schema({
     required: true,
     enum: ['Car', 'VipCar']
   },
+  VIN: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
   type: {
     type: String,
     enum: ['purchase', 'rent', 'installment'],
