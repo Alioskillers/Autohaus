@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
       return this.role === 'Admin' || this.role === 'Global-Admin' || this.role === 'Worker' || this.role === 'Workers-Admin';
     }
   },
+  webAuthnCredentialId: { type: String }, 
+  webAuthnPublicKey: { type: String }, 
+  webAuthnChallenge: { type: String },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
