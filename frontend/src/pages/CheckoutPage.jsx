@@ -45,14 +45,14 @@ const CheckoutPage = () => {
         });
       } else {
         navigate('/card-payment', {
-          state: {
-            buyer,
-            basket: basket.map(item => ({
-              carId: item.car._id,
-              quantity: item.quantity
-            }))
-          }
-        });
+  state: {
+    buyer,
+    basket: basket.map(item => ({
+      ...item,
+      car: item.car
+    }))
+  }
+});
         }
     }
 
