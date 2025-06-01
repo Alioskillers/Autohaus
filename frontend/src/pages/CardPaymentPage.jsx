@@ -66,8 +66,11 @@ const CardPaymentPage = () => {
 
       // 🔗 Record the purchase on blockchain (optional hook per car)
       for (const item of state.basket) {
+        const make = item.make || item.car?.make || "Unknown";
+        const model = item.model || item.car?.model || "Unknown";
+
         await axios.post('/blockchain/record', {
-          carId: `${item.make}-${item.model}`,
+          carId: `${make}-${model}`,
           amount: item.price
         });
       }
