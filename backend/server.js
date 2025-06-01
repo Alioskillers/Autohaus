@@ -19,7 +19,7 @@ app.use(
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
-        imgSrc: ["'self'", "data:", "https:", "https://img-ik.cars.co.za"],
+        imgSrc: ["'self'", "data:", "https:", "https://autohaus-images.s3.amazonaws.com"],
         scriptSrc: ["'self'", "https:"],
         styleSrc: ["'self'", "https:", "'unsafe-inline'"],
       },
@@ -57,6 +57,7 @@ app.use('/api/worker', require('./routes/workerRoutes'));
 app.use('/api/images', require('./routes/imageRoutes'));
 app.use('/api/downtime', require('./routes/downtime'));
 app.use('/api/vin', require('./routes/vinRoutes'));
+app.use('/api/blockchain', require('./routes/blockchainRoutes'));
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 

@@ -43,7 +43,7 @@ const CardPaymentPage = () => {
       setMaskedCard(false);
     }
   }, [cardNumber]);
-  
+
   useEffect(() => {
     if (cvv.length === 3) { // Mask only if full CVV is entered
       const timeout = setTimeout(() => {
@@ -57,16 +57,26 @@ const CardPaymentPage = () => {
 
   const handlePayment = async () => {
     try {
+      setLoading(true);
+
       const response = await axios.post('/payments/card', {
         buyer: state.buyer,
         basket: state.basket
       });
+
+      // 🔗 Record the purchase on blockchain (optional hook per car)
+      for (const item of state.basket) {
+        await axios.post('/blockchain/record', {
+          carId: `${item.make}-${item.model}`,
+          amount: item.price
+        });
+      }
+
       clearBasket();
       navigate('/order-success', { state: response.data });
     } catch (err) {
       console.error('Card payment failed:', err);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -88,35 +98,25 @@ const CardPaymentPage = () => {
       </div>
 
       <div style={styles.formGroup}>
-  <label style={styles.label}>Card Number</label>
-  <input
-    type="text"
-    placeholder="4111 1111 1111 1111"
-    value={
-      maskedCard && cardNumber.length >= 4
-        ? '•••• •••• •••• ' + cardNumber.slice(-4)
-        : cardNumber
-    }
-    onChange={(e) => {
-        const rawValue = e.target.value?.replace(/\D/g, '') || ''; // safe fallback
-        const formatted = rawValue
-          .match(/.{1,4}/g)
-          ?.join(' ')
-          .slice(0, 19) || ''; // fallback to empty string
-      
-        setCardNumber(formatted);
-        setMaskedCard(false);
-      }}
-    style={styles.input}
-  />
-
-  {/* ✅ Only one logo rendered below the input */}
-  {cardType && (
-    <div style={styles.logoContainer}>
-      <img src={cardLogos[cardType]} alt={cardType} style={styles.logoSmall} />
-    </div>
-  )}
-</div>
+        <label style={styles.label}>Card Number</label>
+        <input
+          type="text"
+          placeholder="4111 1111 1111 1111"
+          value={maskedCard && cardNumber.length >= 4 ? '•••• •••• •••• ' + cardNumber.slice(-4) : cardNumber}
+          onChange={(e) => {
+            const rawValue = e.target.value?.replace(/\D/g, '') || ''; // safe fallback
+            const formatted = rawValue.match(/.{1,4}/g)?.join(' ').slice(0, 19) || ''; // fallback to empty string
+            setCardNumber(formatted);
+            setMaskedCard(false);
+          }}
+          style={styles.input}
+        />
+        {cardType && (
+          <div style={styles.logoContainer}>
+            <img src={cardLogos[cardType]} alt={cardType} style={styles.logoSmall} />
+          </div>
+        )}
+      </div>
 
       <div style={styles.inlineGroup}>
         <div style={{ flex: 1, marginRight: '0.5rem' }}>
@@ -126,14 +126,12 @@ const CardPaymentPage = () => {
             placeholder="12/25"
             value={expiry}
             onChange={(e) => {
-                let input = e.target.value.replace(/\D/g, ''); // remove non-digits
-              
-                if (input.length >= 3) {
-                  input = input.slice(0, 2) + '/' + input.slice(2, 4); // auto-insert slash
-                }
-              
-                setExpiry(input);
-              }}
+              let input = e.target.value.replace(/\D/g, ''); // remove non-digits
+              if (input.length >= 3) {
+                input = input.slice(0, 2) + '/' + input.slice(2, 4); // auto-insert slash
+              }
+              setExpiry(input);
+            }}
             style={styles.input}
           />
         </div>
@@ -211,8 +209,8 @@ const styles = {
     marginLeft: '0.25rem',
     display: 'block',
     alignSelf: 'flex-start'
-  }
-  ,logoContainer: {
+  },
+  logoContainer: {
     marginTop: '0.4rem',
     marginLeft: '0.25rem'
   },
