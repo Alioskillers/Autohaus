@@ -51,7 +51,8 @@ const CheckoutPage = () => {
               carId: item.car._id,
               quantity: item.quantity,
               make: item.car.make,
-              model: item.car.model
+              model: item.car.model,
+              price: item.car.price
             }))
           }
         });
