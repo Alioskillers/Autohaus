@@ -52,9 +52,19 @@ const BasketModal = () => {
               <div style={buttonGroup}>
                 <button
                   onClick={() => {
-                    toggleBasketModal();
-                    navigate('/checkout');
-                  }}
+  toggleBasketModal();
+  navigate('/checkout', {
+    state: {
+      basket: basket.map(item => ({
+        carId: item.car._id,
+        quantity: item.quantity,
+        make: item.car.make,
+        model: item.car.model,
+        price: item.car.price,
+      }))
+    }
+  });
+}}
                   style={checkoutBtn}
                 >
                   Proceed to Checkout
