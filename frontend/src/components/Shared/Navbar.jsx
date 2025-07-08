@@ -51,6 +51,7 @@ const Navbar = () => {
         {isAuthenticated ? (
           <>
             <button onClick={() => navigate('/vip-access')} style={linkButtonStyle}>VIP Cars</button>
+            <button onClick={() => navigate('/not-available')} style={linkButtonStyle}>Service Center</button>
             <button onClick={logout} style={linkButtonStyle}>Logout</button>
             <button onClick={toggleBasketModal} style={basketButtonStyle}>Cart ({basket.length})</button>
           </>

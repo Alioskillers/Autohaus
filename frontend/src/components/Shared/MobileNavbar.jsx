@@ -37,6 +37,7 @@ const MobileNavbar = () => {
           {isAuthenticated ? (
             <>
               <button onClick={() => { navigate('/vip-access'); setMenuOpen(false); }}>VIP Cars</button>
+              <button onClick={() => navigate('/not-available')} >Service Center</button>
               <button onClick={() => { logout(); setMenuOpen(false); }}>Logout</button>
               <button onClick={() => { toggleBasketModal(); setMenuOpen(false); }} className="basket-button">
                 Cart ({basket.length})

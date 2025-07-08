@@ -54,6 +54,9 @@ import Downtime from './pages/Downtime';
 import DowntimeGuard from './components/DowntimeGuard';
 import VerifyGenerateVIN from './pages/VerifyGenerateVIN';
 import GenerateVIN from './pages/GenerateVin';
+import ServiceCenter from './pages/ServiceCenter';
+import BookAppointment from './pages/AppointmentFormPage';
+import NotAVBLE from './pages/NotAVBLE';
 
 const AppContent = () => {
   const { showBasket, toggleBasketModal } = useBasket();
@@ -83,6 +86,7 @@ const AppContent = () => {
         <Route path="/enter-otp" element={<EnterOtp />} />
         <Route path="/downtime" element={<Downtime />} />
         <Route path="/admin/verify-downtime" element={<VerifyDowntime />} />
+        <Route path="/not-available" element={<NotAVBLE />} />
         <Route path="/admin/schedule-downtime" element={
           <Layout>
             <ProtectedRoute allowedRoles={['Global-Admin']}>
@@ -344,6 +348,26 @@ const AppContent = () => {
       <Layout>
         <ProtectedRoute allowedRoles={['Workers-Admin']}>
           <GenerateVIN />
+        </ProtectedRoute>
+      </Layout>
+    }
+  />
+  <Route
+    path="/service-center"
+    element={
+      <Layout>
+        <ProtectedRoute allowedRoles={['User']}>
+          <ServiceCenter />
+        </ProtectedRoute>
+      </Layout>
+    }
+  />
+  <Route
+    path="/book-appointment"
+    element={
+      <Layout>
+        <ProtectedRoute allowedRoles={['User']}>
+          <BookAppointment />
         </ProtectedRoute>
       </Layout>
     }
